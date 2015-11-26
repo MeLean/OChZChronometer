@@ -71,7 +71,7 @@ public class TaskEntity {
 
     @Override
     public String toString() {
-        String entityFormat = "id: %d\temployee: %s\ttask: %s done for %d seconds\tinterrupted: %s\tdata added: %s";
+        String entityFormat = "id: %d\temployee: %s\ttask: %s done for %d seconds\t%s\tdata added: %s";
         SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String dateString = dateFormater.format(this.getDateAdded());
 
@@ -80,7 +80,7 @@ public class TaskEntity {
                 this.getEmployee(),
                 this.getTaskName(),
                 this.getSecondsWorked(),
-                (isNotInterrupted() ? "yes" : "no"),
+                (isNotInterrupted() ? "is not interrupted" : "is interrupted"),
                 dateString
 
         );

@@ -17,14 +17,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import static android.widget.Toast.*;
-
 public class home extends AppCompatActivity {
     private boolean isThereTaskStarted = false;
     private Chronometer chronometer = null;
     Button btnStartStop;
     Button btnInterruption;
     Button btnGetAllRecords;
+    Button btnGetReport;
     TextView twTaskMessage_area;
     EditText etEmployeeName;
     private ArrayList<TaskEntity> taskMassif = new ArrayList<TaskEntity>();
@@ -39,8 +38,9 @@ public class home extends AppCompatActivity {
         chronometer = (Chronometer)findViewById(R.id.chronometer);
         btnStartStop = (Button) findViewById(R.id.btnStartStop);
         btnInterruption = (Button) findViewById(R.id.btnInterruption);
-        btnGetAllRecords = (Button) findViewById(R.id.btnGetAllRecords);
         btnInterruption.setVisibility(View.INVISIBLE);
+        btnGetAllRecords = (Button) findViewById(R.id.btnGetAllRecords);
+        btnGetReport = (Button) findViewById(R.id.btnGetReport);
         twTaskMessage_area = (TextView) findViewById(R.id.twTaskMessage_area);
         etEmployeeName = (EditText) findViewById(R.id.etEmployeeName);
 
@@ -51,11 +51,9 @@ public class home extends AppCompatActivity {
                         if(isThereTaskStarted){
                             stopTask(true);
                         }else{
-
-                            //TODO better check this check dont work
                             if(TextUtils.isEmpty(etEmployeeName.getText().toString())){
-                                makeText(getApplicationContext(), getString(R.string.error_employee_name_text),
-                                        LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), getString(R.string.error_employee_name_text),
+                                        Toast.LENGTH_SHORT).show();
                             }else{
                                 chronometer.setBase(SystemClock.elapsedRealtime());
                                 chronometer.start();
@@ -63,6 +61,8 @@ public class home extends AppCompatActivity {
                                 btnStartStop.setText(R.string.stop_text);
                                 isThereTaskStarted = true;
                                 btnInterruption.setVisibility(View.VISIBLE);
+                                btnGetAllRecords.setVisibility(View.INVISIBLE);
+                                btnGetReport.setVisibility(View.INVISIBLE);
                             }
                         }
                     }
@@ -77,8 +77,8 @@ public class home extends AppCompatActivity {
                             stopTask(false);
                         }else{
                             // on normal usage that should never show
-                            makeText(getApplicationContext(), R.string.note_start_task,
-                                    LENGTH_LONG
+                            Toast.makeText(getApplicationContext(), R.string.note_start_task,
+                                    Toast.LENGTH_LONG
                             ).show();
                         }
                     }
@@ -96,8 +96,8 @@ public class home extends AppCompatActivity {
                             result += task.toString() + "\n";
                         }
 
-                        makeText(getApplicationContext(), result,
-                                LENGTH_LONG
+                        Toast.makeText(getApplicationContext(), result,
+                                Toast.LENGTH_LONG
                         ).show();
                     }
                 }
@@ -111,15 +111,17 @@ public class home extends AppCompatActivity {
         btnStartStop.setText(R.string.start_text);
         isThereTaskStarted = false;
         btnInterruption.setVisibility(View.INVISIBLE);
+        btnGetAllRecords.setVisibility(View.VISIBLE);
+        btnGetReport.setVisibility(View.VISIBLE);
         twTaskMessage_area.setText(R.string.Text_nothing);
     }
 
     private void manageElapsedTime(boolean isNotInterrupted){
         long secondsElapsed = (SystemClock.elapsedRealtime() - chronometer.getBase())/1000;
         TaskEntity entity = new TaskEntity(
-                twTaskMessage_area.getText().toString(),
-                TaskId++, //TODO: this is not good. Resolve it better.
                 etEmployeeName.getText().toString(),
+                TaskId++, //TODO: this is not good. Resolve it better.
+                twTaskMessage_area.getText().toString(),
                 secondsElapsed,
                 isNotInterrupted,
                 Calendar.getInstance().getTime()
@@ -136,8 +138,8 @@ public class home extends AppCompatActivity {
     }
 
     private void makeToast(String interruptionText, long secondsElapsed){
-        makeText(getApplicationContext(), "Seconds elapsed: " + secondsElapsed + interruptionText,
-                LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Seconds elapsed: " + secondsElapsed + interruptionText,
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override

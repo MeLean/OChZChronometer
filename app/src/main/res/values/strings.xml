@@ -10,5 +10,5 @@
     <string name="title_activity_all_records">All Records</string>
     <string name="btnGetReport_text">Get Report</string>
     <string name="note_start_task">Please, Start a task!</string>
-    <string name="error_employee_name_text">Please, enter an employee name !</string>
+    <string name="error_employee_name_text">Please, enter an employee name!</string>
 </resources>
