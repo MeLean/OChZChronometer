@@ -12,11 +12,12 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="true"
+        android:id="@+id/right_layout">
 
         <Chronometer
             android:layout_width="fill_parent"
@@ -31,7 +32,8 @@
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/etEmployeeName"
-            android:hint="@string/employee_name_hint" />
+            android:hint="@string/employee_name_hint"
+            android:textAlignment="center" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -88,6 +90,24 @@
             android:text="@string/btnGetReport_text"
             android:id="@+id/btnGetReport"
             android:layout_marginTop="10dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/right_layout"
+        android:layout_toEndOf="@+id/right_layout"
+        android:layout_alignParentTop="true"
+        android:id="@+id/left_layout">
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lwTasks" />
 
     </LinearLayout>
 

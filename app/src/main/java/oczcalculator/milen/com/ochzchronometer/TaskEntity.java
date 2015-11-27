@@ -1,5 +1,10 @@
 package oczcalculator.milen.com.ochzchronometer;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
+import android.widget.TextView;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -71,7 +76,7 @@ public class TaskEntity {
 
     @Override
     public String toString() {
-        String entityFormat = "id: %d\temployee: %s\ttask: %s done for %d seconds\t %s\tdata added: %s";
+        String entityFormat = "id: %d\temployee: %s\ttask: %s done for %d seconds\t %s\tadded date: %s";
         SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String dateString = dateFormater.format(this.getDateAdded());
 

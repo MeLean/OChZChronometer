@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:fitsSystemWindows="true"
-    tools:context="oczcalculator.milen.com.ochzchronometer.allRecords">
+    tools:context="oczcalculator.milen.com.ochzchronometer.AllReports">
 
-    <include layout="@layout/content_all_records" />
+    <include layout="@layout/content_all_reports" />
 
 </android.support.design.widget.CoordinatorLayout>
