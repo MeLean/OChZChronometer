@@ -4,16 +4,16 @@
     <string name="start_text">Start Task</string>
     <string name="stop_text">Stop Task</string>
     <string name="interruption_text">Interrupt Task</string>
-    <string name="Text_nothing">nothing!</string>
+    <string name="text_nothing">nothing!</string>
     <string name="workingOn_label">working on:</string>
     <string name="task_chosen_text">task chosen:</string>
     <string name="btnGetAllRecords_text">Get All Records</string>
     <string name="title_activity_all_records">All Records</string>
     <string name="btnGetReport_text">Get Report</string>
-    <string name="note_start_task">Please, Start a task!</string>
+    <string name="note_start_task">Please, chose a task!</string>
     <string name="employee_name_hint">Enter a name!</string>
     <string name="error_employee_name_text">Please, enter an employee name!</string>
     <string name="no_entities_text">There are no entities!</string>
-    <string name="empty_string" />
+    <string name="empty_string"></string>
     <string name="title_activity_all_reports">All Reports</string>
 </resources>

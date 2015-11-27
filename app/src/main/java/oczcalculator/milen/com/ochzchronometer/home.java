@@ -67,6 +67,10 @@ public class home extends AppCompatActivity {
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (isThereTaskStarted) {
+                            return;
+                        }
+
                         String itemText = parent.getItemAtPosition(position).toString();
                         twLabelWorkingOn.setText(getString(R.string.task_chosen_text));
                         twTaskMessage_area.setText(itemText);
@@ -78,21 +82,22 @@ public class home extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(isThereTaskStarted){
+                        if (isThereTaskStarted) {
                             stopTask(true);
-                        }else{
-                            if(TextUtils.isEmpty(etEmployeeName.getText().toString())){
+                        } else {
+                            if (TextUtils.isEmpty(etEmployeeName.getText().toString())) {
                                 Toast.makeText(getApplicationContext(), getString(R.string.error_employee_name_text),
                                         Toast.LENGTH_SHORT).show();
-                            }else{
-                                chronometer.setBase(SystemClock.elapsedRealtime());
-                                chronometer.start();
-                                twLabelWorkingOn.setText(getString(R.string.workingOn_label));
-                                btnStartStop.setText(R.string.stop_text);
-                                isThereTaskStarted = true;
-                                btnInterruption.setVisibility(View.VISIBLE);
-                                btnGetAllRecords.setVisibility(View.INVISIBLE);
-                                btnGetReport.setVisibility(View.INVISIBLE);
+                            } else {
+                                boolean taskChosen = !(twTaskMessage_area.getText().toString().equals(getString(R.string.text_nothing)));
+                                if (taskChosen) {
+                                    startTask();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), R.string.note_start_task,
+                                            Toast.LENGTH_LONG
+                                    ).show();
+                                }
+
                             }
                         }
                     }
@@ -151,6 +156,18 @@ public class home extends AppCompatActivity {
         );
     }
 
+    private void startTask() {
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        chronometer.start();
+        twLabelWorkingOn.setText(getString(R.string.workingOn_label));
+        btnStartStop.setText(R.string.stop_text);
+        isThereTaskStarted = true;
+        btnInterruption.setVisibility(View.VISIBLE);
+        btnGetAllRecords.setVisibility(View.INVISIBLE);
+        btnGetReport.setVisibility(View.INVISIBLE);
+        etEmployeeName.setFocusable(false);
+    }
+
     private void stopTask(boolean isNotInterrupted){
         chronometer.stop();
         manageElapsedTime(isNotInterrupted);
@@ -160,7 +177,7 @@ public class home extends AppCompatActivity {
         btnInterruption.setVisibility(View.INVISIBLE);
         btnGetAllRecords.setVisibility(View.VISIBLE);
         btnGetReport.setVisibility(View.VISIBLE);
-        twTaskMessage_area.setText(R.string.Text_nothing);
+        twTaskMessage_area.setText(R.string.text_nothing);
     }
 
     private void manageElapsedTime(boolean isNotInterrupted){
