@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AllRecords"
+            android:name=".AllRecordsActivity"
             android:label="@string/title_activity_all_reports"
             android:parentActivityName=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar" >
@@ -28,7 +28,7 @@
                 android:value=".HomeActivity" />
         </activity>
         <activity
-            android:name=".TasksReport"
+            android:name=".TasksReportActivity"
             android:label="@string/title_activity_tasks_report"
             android:parentActivityName=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar" >

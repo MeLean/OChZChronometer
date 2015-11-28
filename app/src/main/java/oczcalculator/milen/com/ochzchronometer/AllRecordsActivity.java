@@ -6,7 +6,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
 
-public class AllRecords extends AppCompatActivity {
+public class AllRecordsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

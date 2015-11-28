@@ -1,15 +1,8 @@
 package oczcalculator.milen.com.ochzchronometer;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.widget.TextView;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TaskEntity {
-
     private int _id;
     private String taskName;
     private long secondsWorked;

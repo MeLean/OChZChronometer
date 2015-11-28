@@ -18,7 +18,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class HomeActivity extends AppCompatActivity {
+import static android.widget.ListView.*;
+
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemClickListener{
     private boolean isThereTaskStarted = false;
     private Chronometer chronometer = null;
     Button btnStartStop;
@@ -31,6 +33,10 @@ public class HomeActivity extends AppCompatActivity {
     ListView lwTasks;
     private ArrayList<TaskEntity> taskMassiv = new ArrayList<>();
     private static int TaskId = 0;
+    //making tasksStringArray needed for ListView
+    private String[] tasksStringArray = {
+            "Task1","Task2","Task3","Task4","Task5","Task6","Task7","Task8","Task9","Task10","Task11"
+    }; //TODO this is hardcoded make method that get it from DB
 
 
     @Override
@@ -49,10 +55,13 @@ public class HomeActivity extends AppCompatActivity {
         etEmployeeName = (EditText) findViewById(R.id.etEmployeeName);
         lwTasks = (ListView) findViewById(R.id.lwTasks);
 
-        //making tasksStringArray for LisView
-        final String[] tasksStringArray = {
-                "Task1","Task2","Task3","Task4","Task5","Task6","Task7","Task8","Task9","Task10","Task11"
-        }; //TODO this is hardcoded make method that get it from DB
+        btnStartStop.setOnClickListener(this);
+        btnInterruption.setOnClickListener(this);
+        btnGetAllRecords.setOnClickListener(this);
+        btnGetReport.setOnClickListener(this);
+
+        lwTasks.setOnItemClickListener(this);
+
 
         ListAdapter tasksListAdapter = new ArrayAdapter<String>(
                 HomeActivity.this,
@@ -60,121 +69,99 @@ public class HomeActivity extends AppCompatActivity {
                 tasksStringArray
         );
         lwTasks.setAdapter(tasksListAdapter);
+    }
 
-        lwTasks.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (isThereTaskStarted) {
-                            return;
-                        }
+    @Override
+    public void onClick(View v) {
 
-                        String itemText = parent.getItemAtPosition(position).toString();
-                        twLabelWorkingOn.setText(getString(R.string.task_chosen_text));
-                        twTaskMessage_area.setText(itemText);
-                    }
-                }
-        );
-
-        btnStartStop.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (isThereTaskStarted) {
-                            stopTask(true);
+        switch (v.getId()){
+            case R.id.btnStartStop :
+                if (isThereTaskStarted) {
+                    stopTask(true);
+                } else {
+                    if (TextUtils.isEmpty(etEmployeeName.getText().toString())) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.error_employee_name_text),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        boolean taskChosen = !(twTaskMessage_area.getText().toString().equals(getString(R.string.text_nothing)));
+                        if (taskChosen) {
+                            startTask();
                         } else {
-                            if (TextUtils.isEmpty(etEmployeeName.getText().toString())) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.error_employee_name_text),
-                                        Toast.LENGTH_SHORT).show();
-                            } else {
-                                boolean taskChosen = !(twTaskMessage_area.getText().toString().equals(getString(R.string.text_nothing)));
-                                if (taskChosen) {
-                                    startTask();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), R.string.note_start_task,
-                                            Toast.LENGTH_LONG
-                                    ).show();
-                                }
-
-                            }
-                        }
-                    }
-                }
-        );
-
-        btnInterruption.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(isThereTaskStarted){
-                            stopTask(false);
-                        }else{
-                            // on normal usage that should never show
                             Toast.makeText(getApplicationContext(), R.string.note_start_task,
                                     Toast.LENGTH_LONG
                             ).show();
                         }
                     }
                 }
-        );
 
-        btnGetAllRecords.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            break;
 
-                        String result = "";
+            case R.id.btnInterruption :
+                if(isThereTaskStarted){
+                    stopTask(false);
+                }else{
+                    // on normal usage that should never show
+                    Toast.makeText(getApplicationContext(), R.string.note_start_task,
+                            Toast.LENGTH_LONG
+                    ).show();
+                }if(isThereTaskStarted){
+                stopTask(false);
+            }else{
+                // on normal usage that should never show
+                Toast.makeText(getApplicationContext(), R.string.note_start_task,
+                        Toast.LENGTH_LONG
+                ).show();
+            }
 
-                        for (TaskEntity task : taskMassiv) {
-                            result += task.toString() + "\n\n";
-                        }
+            break;
 
-                        Intent intent = new Intent(HomeActivity.this, AllRecords.class);
-                        intent.putExtra("reports", result);
-                        startActivity(intent);
-                       /*Toast.makeText(getApplicationContext(), result,
-                                Toast.LENGTH_LONG
-                        ).show();*/
-                    }
+            case R.id.btnGetAllRecords :
+                String result = "";
+
+                for (TaskEntity task : taskMassiv) {
+                    result += task.toString() + "\n\n";
                 }
-        );
 
-        btnGetReport.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //TODO implement this
-                        Intent intent = new Intent(HomeActivity.this, TasksReport.class);
-                        String result = getString(R.string.head_of_table_report);
+                Intent intentAllRecords = new Intent(HomeActivity.this, AllRecordsActivity.class);
+                intentAllRecords.putExtra("reports", result);
+                startActivity(intentAllRecords);
+            break;
 
-                        for (String taskString : tasksStringArray) {
-                            int timesOccur = 0;
-                            long secondsTaskWorked = 0;
+            case R.id.btnGetReport :
+                //TODO implement this
+                Intent intentGetReport = new Intent(HomeActivity.this, TasksReportActivity.class);
+                String report = getString(R.string.head_of_table_report);
 
-                            for (TaskEntity task :  taskMassiv) {
-                                boolean hasMatch = task.getTaskName().equalsIgnoreCase(taskString);
-                                if (hasMatch){
-                                    secondsTaskWorked += task.getSecondsWorked();
-                                    if (task.isNotInterrupted()){
-                                        timesOccur++;
-                                    }
-                                }
-                            }
+                for (String taskString : tasksStringArray) {
+                    int timesOccur = 0;
+                    long secondsTaskWorked = 0;
 
-                            if (secondsTaskWorked != 0){
-                                float averageTime = timesOccur != 0 ? (float) (secondsTaskWorked / timesOccur) : (float) secondsTaskWorked;
-                                result += String.format("%s:\ttimes: %d\tavg: %.2f\n",
-                                        taskString,
-                                        timesOccur,
-                                        averageTime);
+                    for (TaskEntity task :  taskMassiv) {
+                        boolean hasMatch = task.getTaskName().equalsIgnoreCase(taskString);
+                        if (hasMatch){
+                            secondsTaskWorked += task.getSecondsWorked();
+                            if (task.isNotInterrupted()){
+                                timesOccur++;
                             }
                         }
+                    }
 
-                        intent.putExtra("tasksStringArray", result);
-                        startActivity(intent);
+                    if (secondsTaskWorked != 0){
+                        float averageTime = timesOccur != 0 ? (float) (secondsTaskWorked / timesOccur) : (float) secondsTaskWorked;
+                        report += String.format("%s:\ttimes: %d\tavg: %.2f\n",
+                                taskString,
+                                timesOccur,
+                                averageTime);
                     }
                 }
-        );
+
+                intentGetReport.putExtra("tasksStringArray", report);
+                startActivity(intentGetReport);
+            break;
+
+            default: return;
+        }
+
     }
 
     private void startTask() {
@@ -222,8 +209,21 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    //TODO decide if you remove this
     private void makeToast(String interruptionText, long secondsElapsed){
         Toast.makeText(getApplicationContext(), "Seconds elapsed: " + secondsElapsed + interruptionText,
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //it is only one ListView in the activity no switch needed
+        if (isThereTaskStarted) {
+            return;
+        }
+
+        String itemText = parent.getItemAtPosition(position).toString();
+        twLabelWorkingOn.setText(getString(R.string.task_chosen_text));
+        twTaskMessage_area.setText(itemText);
     }
 }
