@@ -6,8 +6,6 @@ import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,7 +18,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class home extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
     private boolean isThereTaskStarted = false;
     private Chronometer chronometer = null;
     Button btnStartStop;
@@ -51,15 +49,15 @@ public class home extends AppCompatActivity {
         etEmployeeName = (EditText) findViewById(R.id.etEmployeeName);
         lwTasks = (ListView) findViewById(R.id.lwTasks);
 
-        //making tasksArray for LisView
-        String[] tasksArray = {
+        //making tasksStringArray for LisView
+        final String[] tasksStringArray = {
                 "Task1","Task2","Task3","Task4","Task5","Task6","Task7","Task8","Task9","Task10","Task11"
         }; //TODO this is hardcoded make method that get it from DB
 
         ListAdapter tasksListAdapter = new ArrayAdapter<String>(
-                home.this,
+                HomeActivity.this,
                 android.R.layout.simple_expandable_list_item_1,
-                tasksArray
+                tasksStringArray
         );
         lwTasks.setAdapter(tasksListAdapter);
 
@@ -131,7 +129,7 @@ public class home extends AppCompatActivity {
                             result += task.toString() + "\n\n";
                         }
 
-                        Intent intent = new Intent(home.this, AllReports.class);
+                        Intent intent = new Intent(HomeActivity.this, AllRecords.class);
                         intent.putExtra("reports", result);
                         startActivity(intent);
                        /*Toast.makeText(getApplicationContext(), result,
@@ -146,11 +144,34 @@ public class home extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         //TODO implement this
-                        String result = "Implement ME";
+                        Intent intent = new Intent(HomeActivity.this, TasksReport.class);
+                        String result = getString(R.string.head_of_table_report);
 
-                        Toast.makeText(getApplicationContext(), result,
-                                Toast.LENGTH_LONG
-                        ).show();
+                        for (String taskString : tasksStringArray) {
+                            int timesOccur = 0;
+                            long secondsTaskWorked = 0;
+
+                            for (TaskEntity task :  taskMassiv) {
+                                boolean hasMatch = task.getTaskName().equalsIgnoreCase(taskString);
+                                if (hasMatch){
+                                    secondsTaskWorked += task.getSecondsWorked();
+                                    if (task.isNotInterrupted()){
+                                        timesOccur++;
+                                    }
+                                }
+                            }
+
+                            if (secondsTaskWorked != 0){
+                                float averageTime = timesOccur != 0 ? (float) (secondsTaskWorked / timesOccur) : (float) secondsTaskWorked;
+                                result += String.format("%s:\ttimes: %d\tavg: %.2f\n",
+                                        taskString,
+                                        timesOccur,
+                                        averageTime);
+                            }
+                        }
+
+                        intent.putExtra("tasksStringArray", result);
+                        startActivity(intent);
                     }
                 }
         );
@@ -204,27 +225,5 @@ public class home extends AppCompatActivity {
     private void makeToast(String interruptionText, long secondsElapsed){
         Toast.makeText(getApplicationContext(), "Seconds elapsed: " + secondsElapsed + interruptionText,
                 Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

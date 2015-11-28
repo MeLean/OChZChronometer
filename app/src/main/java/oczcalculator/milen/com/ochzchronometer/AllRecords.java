@@ -1,11 +1,12 @@
 package oczcalculator.milen.com.ochzchronometer;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
 
-public class AllReports extends Activity {
+public class AllRecords extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
