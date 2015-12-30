@@ -2,7 +2,7 @@
     <string name="app_name">OChZChronometer</string>
     <string name="action_settings">Settings</string>
     <string name="start_text">Start Task</string>
-    <string name="stop_text">Stop Task</string>
+    <string name="stop_text">Finish Task</string>
     <string name="interruption_text">Interrupt Task</string>
     <string name="text_nothing">nothing!</string>
     <string name="workingOn_label">working on:</string>
@@ -13,9 +13,15 @@
     <string name="note_start_task">Please, chose a task!</string>
     <string name="employee_name_hint">Enter a name!</string>
     <string name="error_employee_name_text">Please, enter an employee name!</string>
-    <string name="no_entities_text">There are no entities!</string>
+    <string name="no_entities_text">There is no entity!</string>
     <string name="empty_string"></string>
     <string name="title_activity_all_reports">All Reports</string>
     <string name="title_activity_tasks_report">Report</string>
     <string name="head_of_table_report">Report:\n</string>
+    <string name="title_activity_set_task">SetTaskActivity</string>
+    <string name="delete_tasks">Delete current tasks</string>
+    <string name="first_part_inputTasks_hint">Type taska separated by </string>
+    <string name="append_cur_tasks">Append Entered Tasks</string>
+    <string name="delete_cur_tasks">Replace Whit Entered Tasks</string>
+    <string name="btn_changeTasks_text">Change Tasks</string>
 </resources>

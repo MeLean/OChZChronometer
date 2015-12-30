@@ -1,6 +1,7 @@
 package oczcalculator.milen.com.ochzchronometer;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
@@ -15,60 +16,99 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.ArrayList;
-import java.util.Calendar;
 
-import static android.widget.ListView.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemClickListener{
+    private static String DEFAULT_TASK_NAMES_STRING = "Task 1; Task 2; Task 3;";
+    private static String TASK_SEPARATOR = ";";
     private boolean isThereTaskStarted = false;
     private Chronometer chronometer = null;
-    Button btnStartStop;
-    Button btnInterruption;
-    Button btnGetAllRecords;
-    Button btnGetReport;
-    TextView twLabelWorkingOn;
-    TextView twTaskMessage_area;
-    EditText etEmployeeName;
-    ListView lwTasks;
-    private ArrayList<TaskEntity> taskMassiv = new ArrayList<>();
-    private static int TaskId = 0;
-    //making tasksStringArray needed for ListView
-    private String[] tasksStringArray = {
-            "Task1","Task2","Task3","Task4","Task5","Task6","Task7","Task8","Task9","Task10","Task11"
-    }; //TODO this is hardcoded make method that get it from DB
-
-
+    private Button btnStartStop;
+    private Button btnInterruption;
+    private Button btnGetAllRecords;
+    private Button btnGetReport;
+    private Button btnChangeTasks;
+    private TextView twLabelWorkingOn;
+    private TextView twTaskMessage_area;
+    private EditText etEmployeeName;
+    private ListView lwTasks;
+    private ArrayList<TaskEntity> taskMassiv;
+    private String[] tasksStringArray;
+    private String stringList;
+    private SharedPreferences namesSharedPreferences;
+    private SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        initializeComponents();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        stringList = namesSharedPreferences.getString("stringList", null);
+        if (stringList == null){
+            stringList = DEFAULT_TASK_NAMES_STRING;
+        }
+
+        lwTasks.setAdapter(makeListAdapterFromString(stringList));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        editor.putString("stringList", stringList);
+        editor.commit();
+    }
+
+    private void initializeComponents() {
         chronometer = (Chronometer)findViewById(R.id.chronometer);
         btnStartStop = (Button) findViewById(R.id.btnStartStop);
         btnInterruption = (Button) findViewById(R.id.btnInterruption);
         btnInterruption.setVisibility(View.INVISIBLE);
         btnGetAllRecords = (Button) findViewById(R.id.btnGetAllRecords);
         btnGetReport = (Button) findViewById(R.id.btnGetReport);
-        twTaskMessage_area = (TextView) findViewById(R.id.twTaskMessage_area);
-        twLabelWorkingOn = (TextView) findViewById(R.id.twLabelWorkingOn);
-        etEmployeeName = (EditText) findViewById(R.id.etEmployeeName);
-        lwTasks = (ListView) findViewById(R.id.lwTasks);
+        btnChangeTasks = (Button) findViewById(R.id.btnChangeTasks);
 
         btnStartStop.setOnClickListener(this);
         btnInterruption.setOnClickListener(this);
         btnGetAllRecords.setOnClickListener(this);
         btnGetReport.setOnClickListener(this);
+        btnChangeTasks.setOnClickListener(this);
+
+        twTaskMessage_area = (TextView) findViewById(R.id.twTaskMessage_area);
+        twLabelWorkingOn = (TextView) findViewById(R.id.twLabelWorkingOn);
+        etEmployeeName = (EditText) findViewById(R.id.etEmployeeName);
+        lwTasks = (ListView) findViewById(R.id.lwTasks);
 
         lwTasks.setOnItemClickListener(this);
 
+        taskMassiv = new ArrayList<TaskEntity>();
 
-        ListAdapter tasksListAdapter = new ArrayAdapter<String>(
+        namesSharedPreferences = getSharedPreferences("ListViewTaskNames", 0);
+        editor = namesSharedPreferences.edit();
+    }
+
+    private ListAdapter makeListAdapterFromString(String stringList) {
+
+        tasksStringArray = stringList.trim().split(String.format("\\s*%s\\s*", TASK_SEPARATOR));
+
+        ListAdapter tasksListAdapter = new ArrayAdapter<>(
                 HomeActivity.this,
                 android.R.layout.simple_expandable_list_item_1,
-                tasksStringArray
-        );
-        lwTasks.setAdapter(tasksListAdapter);
+                removeDuplicateOrEmptyTasks(tasksStringArray)
+                );
+
+        return tasksListAdapter;
     }
 
     @Override
@@ -93,7 +133,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }
                 }
-
             break;
 
             case R.id.btnInterruption :
@@ -156,12 +195,32 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 intentGetReport.putExtra("tasksStringArray", report);
+                finish();
                 startActivity(intentGetReport);
             break;
+
+            case R.id.btnChangeTasks :
+                Intent intent = new Intent(HomeActivity.this, SetTaskActivity.class);
+                intent.putExtra("stringsSeparator", TASK_SEPARATOR);
+                startActivity(intent);
+            break;
+
 
             default: return;
         }
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //it is only one ListView in the activity no switch needed
+        if (isThereTaskStarted) {
+            return;
+        }
+
+        String itemText = parent.getItemAtPosition(position).toString();
+        twLabelWorkingOn.setText(getString(R.string.task_chosen_text));
+        twTaskMessage_area.setText(itemText);
     }
 
     private void startTask() {
@@ -178,7 +237,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void stopTask(boolean isNotInterrupted){
         chronometer.stop();
-        manageElapsedTime(isNotInterrupted);
+        addDataToDB(isNotInterrupted);
         chronometer.setBase(SystemClock.elapsedRealtime());
         btnStartStop.setText(R.string.start_text);
         isThereTaskStarted = false;
@@ -188,17 +247,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         twTaskMessage_area.setText(R.string.text_nothing);
     }
 
-    private void manageElapsedTime(boolean isNotInterrupted){
+    private void addDataToDB(boolean isNotInterrupted){
         long secondsElapsed = (SystemClock.elapsedRealtime() - chronometer.getBase())/1000;
         TaskEntity entity = new TaskEntity(
                 etEmployeeName.getText().toString(),
-                TaskId++, //TODO: this is not good. Resolve it better.
                 twTaskMessage_area.getText().toString(),
                 secondsElapsed,
                 isNotInterrupted,
                 Calendar.getInstance().getTime()
         );
-
+        //TODO make a db maintenance
         taskMassiv.add(entity);
 
         if (isNotInterrupted){
@@ -206,24 +264,25 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }else{
             makeToast(" is interrupted", secondsElapsed);
         }
-
     }
 
-    //TODO decide if you remove this
+    private String[] removeDuplicateOrEmptyTasks(String[] tasksStringArray){
+        HashSet<String> set = new HashSet<String>();
+        for(int i = tasksStringArray.length - 1; i >= 0; i-- ) {
+            String task = tasksStringArray[i];
+            if(task.length() > 0){
+                set.add(task);
+            }
+        }
+
+        String[] result = set.toArray(new String[set.size()]);
+        Arrays.sort(result); // sorting the array for fast task finding
+        return result;
+    }
+
+    //TODO decide if you remove this notification
     private void makeToast(String interruptionText, long secondsElapsed){
         Toast.makeText(getApplicationContext(), "Seconds elapsed: " + secondsElapsed + interruptionText,
                 Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //it is only one ListView in the activity no switch needed
-        if (isThereTaskStarted) {
-            return;
-        }
-
-        String itemText = parent.getItemAtPosition(position).toString();
-        twLabelWorkingOn.setText(getString(R.string.task_chosen_text));
-        twTaskMessage_area.setText(itemText);
     }
 }

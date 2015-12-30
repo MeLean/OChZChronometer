@@ -1,30 +1,38 @@
 package oczcalculator.milen.com.ochzchronometer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+// refactor the _
 public class TaskEntity {
+
     private int _id;
+    private String employeeName;
     private String taskName;
     private long secondsWorked;
     private boolean isNotInterrupted;
     private Date dateAdded;
-    private String employee;
 
-    public TaskEntity(String employee, int id, String name, long secondsWorked, boolean isNotInterrupted, Date dateAdded) {
-        setEmployee(employee);
-        setId(id);
-        setTaskName(name);
+    private static final int DEFAULT_ID = 0;
+
+
+    public TaskEntity(String employeeName, int taskId, String taskName, long secondsWorked, boolean isNotInterrupted, Date dateAdded) {
+        setEmployee(employeeName);
+        setId(taskId);
+        setTaskName(taskName);
         setSecondsWorked(secondsWorked);
         setIsNotInterrupted(isNotInterrupted);
         setDateAdded(dateAdded);
     }
 
+    public TaskEntity(String employeeName, String taskName, long secondsWorked, boolean isNotInterrupted, Date dateAdded) {
+        this(employeeName, DEFAULT_ID, taskName, secondsWorked, isNotInterrupted, dateAdded);
+    }
+
     public String getEmployee() {
-        return employee;
+        return employeeName;
     }
 
     public void setEmployee(String employee) {
-        this.employee = employee;
+        this.employeeName = employee;
     }
 
     public int getId() {
@@ -39,8 +47,8 @@ public class TaskEntity {
         return taskName;
     }
 
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
+    public void setTaskName(String _taskName) {
+        this.taskName = _taskName;
     }
 
     public long getSecondsWorked() {
@@ -69,20 +77,19 @@ public class TaskEntity {
 
     @Override
     public String toString() {
-        String entityFormat = "id: %d\temployee: %s\ttask: %s done for %d seconds\t %s\tadded date: %s";
-        SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String dateString = dateFormater.format(this.getDateAdded());
+        String entityFormat = "employee: %s\ntask: %s done for %d sec.\n%s\nadded date: %s";
+        SimpleDateFormat dateStringFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String dateString = dateStringFormatter.format(this.getDateAdded());
 
-        String result = String.format(entityFormat,
-                this.getId(),
+        String resultString = String.format(
+                entityFormat,
                 this.getEmployee(),
                 this.getTaskName(),
                 this.getSecondsWorked(),
                 (isNotInterrupted() ? "is not interrupted" : "is interrupted"),
                 dateString
-
         );
 
-        return result;
+        return resultString;
     }
 }

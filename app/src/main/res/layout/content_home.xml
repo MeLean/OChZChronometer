@@ -17,7 +17,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="false"
         android:layout_alignParentTop="true"
-        android:id="@+id/right_layout">
+        android:id="@+id/right_layout"
+        android:weightSum="1">
 
         <Chronometer
             android:layout_width="fill_parent"
@@ -81,7 +82,8 @@
             android:layout_height="wrap_content"
             android:text="@string/btnGetAllRecords_text"
             android:id="@+id/btnGetAllRecords"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"
+            android:layout_weight="0.15" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -89,6 +91,15 @@
             android:layout_height="wrap_content"
             android:text="@string/btnGetReport_text"
             android:id="@+id/btnGetReport"
+            android:layout_marginTop="10dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_changeTasks_text"
+            android:id="@+id/btnChangeTasks"
+            android:singleLine="false"
             android:layout_marginTop="10dp" />
 
     </LinearLayout>
@@ -102,12 +113,15 @@
         android:layout_toRightOf="@+id/right_layout"
         android:layout_toEndOf="@+id/right_layout"
         android:layout_alignParentTop="true"
-        android:id="@+id/left_layout">
+        android:id="@+id/left_layout"
+        android:weightSum="1">
 
         <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/lwTasks" />
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/lwTasks"
+            android:layout_weight="0.90"
+            android:focusableInTouchMode="false" />
 
     </LinearLayout>
 
