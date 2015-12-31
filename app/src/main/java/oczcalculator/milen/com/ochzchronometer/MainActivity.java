@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -272,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 twTaskMessage_area.getText().toString(),
                 secondsElapsed,
                 isNotInterrupted,
-                Calendar.getInstance().getTime().toString()
+                getDateAsStringInFormat(getString(R.string.date_time_pattern))
         );
         try {
             db.open();
@@ -281,8 +282,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
 
         if (isNotInterrupted){
             makeToast(getString(R.string.is_not_interrupted), secondsElapsed);
@@ -309,5 +308,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void makeToast(String interruptionText, long secondsElapsed){
         Toast.makeText(getApplicationContext(), "Seconds elapsed: " + secondsElapsed + interruptionText,
                 Toast.LENGTH_SHORT).show();
+    }
+
+    private String getDateAsStringInFormat(String pattern) {
+        String result;
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        result = formatter.format(Calendar.getInstance().getTime());
+        return result;
     }
 }
