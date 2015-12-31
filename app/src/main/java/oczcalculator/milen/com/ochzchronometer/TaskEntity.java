@@ -1,7 +1,6 @@
 package oczcalculator.milen.com.ochzchronometer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-// refactor the _
 public class TaskEntity {
 
     private int _id;
@@ -9,12 +8,13 @@ public class TaskEntity {
     private String taskName;
     private long secondsWorked;
     private boolean isNotInterrupted;
-    private Date dateAdded;
+    private String dateAdded;
 
     private static final int DEFAULT_ID = 0;
 
 
-    public TaskEntity(String employeeName, int taskId, String taskName, long secondsWorked, boolean isNotInterrupted, Date dateAdded) {
+
+    public TaskEntity(String employeeName, int taskId, String taskName, long secondsWorked, boolean isNotInterrupted, String dateAdded) {
         setEmployee(employeeName);
         setId(taskId);
         setTaskName(taskName);
@@ -23,7 +23,7 @@ public class TaskEntity {
         setDateAdded(dateAdded);
     }
 
-    public TaskEntity(String employeeName, String taskName, long secondsWorked, boolean isNotInterrupted, Date dateAdded) {
+    public TaskEntity(String employeeName, String taskName, long secondsWorked, boolean isNotInterrupted, String dateAdded) {
         this(employeeName, DEFAULT_ID, taskName, secondsWorked, isNotInterrupted, dateAdded);
     }
 
@@ -47,8 +47,8 @@ public class TaskEntity {
         return taskName;
     }
 
-    public void setTaskName(String _taskName) {
-        this.taskName = _taskName;
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
 
     public long getSecondsWorked() {
@@ -67,19 +67,17 @@ public class TaskEntity {
         this.isNotInterrupted = isNotInterrupted;
     }
 
-    public Date getDateAdded() {
+    public String getDateAdded() {
         return dateAdded;
     }
 
-    public void setDateAdded(Date dateAdded) {
+    public void setDateAdded(String dateAdded) {
         this.dateAdded = dateAdded;
     }
 
     @Override
     public String toString() {
         String entityFormat = "employee: %s\ntask: %s done for %d sec.\n%s\nadded date: %s";
-        SimpleDateFormat dateStringFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String dateString = dateStringFormatter.format(this.getDateAdded());
 
         String resultString = String.format(
                 entityFormat,
@@ -87,7 +85,7 @@ public class TaskEntity {
                 this.getTaskName(),
                 this.getSecondsWorked(),
                 (isNotInterrupted() ? "is not interrupted" : "is interrupted"),
-                dateString
+                this.getDateAdded()
         );
 
         return resultString;

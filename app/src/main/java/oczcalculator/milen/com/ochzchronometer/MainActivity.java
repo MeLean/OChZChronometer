@@ -1,7 +1,9 @@
 package oczcalculator.milen.com.ochzchronometer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
@@ -17,15 +19,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemClickListener{
+import static android.widget.Toast.LENGTH_LONG;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemClickListener{
     private static String DEFAULT_TASK_NAMES_STRING = "Task 1; Task 2; Task 3;";
     private static String TASK_SEPARATOR = ";";
     private boolean isThereTaskStarted = false;
@@ -44,6 +48,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private String stringList;
     private SharedPreferences namesSharedPreferences;
     private SharedPreferences.Editor editor;
+    private DBHelper db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +102,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         namesSharedPreferences = getSharedPreferences("ListViewTaskNames", 0);
         editor = namesSharedPreferences.edit();
+        db = DBHelper.getInstance(this);
     }
 
     private ListAdapter makeListAdapterFromString(String stringList) {
@@ -103,7 +110,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         tasksStringArray = stringList.trim().split(String.format("\\s*%s\\s*", TASK_SEPARATOR));
 
         ListAdapter tasksListAdapter = new ArrayAdapter<>(
-                HomeActivity.this,
+                MainActivity.this,
                 android.R.layout.simple_expandable_list_item_1,
                 removeDuplicateOrEmptyTasks(tasksStringArray)
                 );
@@ -128,7 +135,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             startTask();
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.note_start_task,
-                                    Toast.LENGTH_LONG
+                                    LENGTH_LONG
                             ).show();
                         }
                     }
@@ -141,14 +148,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 }else{
                     // on normal usage that should never show
                     Toast.makeText(getApplicationContext(), R.string.note_start_task,
-                            Toast.LENGTH_LONG
+                            LENGTH_LONG
                     ).show();
                 }if(isThereTaskStarted){
                 stopTask(false);
             }else{
                 // on normal usage that should never show
                 Toast.makeText(getApplicationContext(), R.string.note_start_task,
-                        Toast.LENGTH_LONG
+                        LENGTH_LONG
                 ).show();
             }
 
@@ -156,22 +163,35 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btnGetAllRecords :
                 String result = "";
-
+                try {
+                    db.open();
+                    taskMassiv = db.getAllTasks();
+                    db.open();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 for (TaskEntity task : taskMassiv) {
                     result += task.toString() + "\n\n";
                 }
 
-                Intent intentAllRecords = new Intent(HomeActivity.this, AllRecordsActivity.class);
+                Intent intentAllRecords = new Intent(MainActivity.this, AllRecordsActivity.class);
                 intentAllRecords.putExtra("reports", result);
                 startActivity(intentAllRecords);
             break;
 
             case R.id.btnGetReport :
-                //TODO implement this
-                Intent intentGetReport = new Intent(HomeActivity.this, TasksReportActivity.class);
+                //TODO make it asinc
+                Intent intentGetReport = new Intent(MainActivity.this, TasksReportActivity.class);
                 String report = getString(R.string.head_of_table_report);
-
-                for (String taskString : tasksStringArray) {
+                try {
+                    db.open();
+                    taskMassiv = db.getAllTasks();
+                    db.open();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                String[] uniqueTasks = new HashSet<String>(Arrays.asList(tasksStringArray)).toArray(new String[0]);
+                for (String taskString : uniqueTasks) {
                     int timesOccur = 0;
                     long secondsTaskWorked = 0;
 
@@ -195,16 +215,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 intentGetReport.putExtra("tasksStringArray", report);
-                finish();
                 startActivity(intentGetReport);
             break;
 
             case R.id.btnChangeTasks :
-                Intent intent = new Intent(HomeActivity.this, SetTaskActivity.class);
+                Intent intent = new Intent(MainActivity.this, SetTaskActivity.class);
                 intent.putExtra("stringsSeparator", TASK_SEPARATOR);
                 startActivity(intent);
             break;
-
 
             default: return;
         }
@@ -254,15 +272,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 twTaskMessage_area.getText().toString(),
                 secondsElapsed,
                 isNotInterrupted,
-                Calendar.getInstance().getTime()
+                Calendar.getInstance().getTime().toString()
         );
-        //TODO make a db maintenance
-        taskMassiv.add(entity);
+        try {
+            db.open();
+            db.addTask(entity);
+            db.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
 
         if (isNotInterrupted){
-            makeToast(" is not interrupted", secondsElapsed);
+            makeToast(getString(R.string.is_not_interrupted), secondsElapsed);
         }else{
-            makeToast(" is interrupted", secondsElapsed);
+            makeToast(getString(R.string.is_interrupted), secondsElapsed);
         }
     }
 
@@ -271,7 +296,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         for(int i = tasksStringArray.length - 1; i >= 0; i-- ) {
             String task = tasksStringArray[i];
             if(task.length() > 0){
-                set.add(task);
+               set.add(task);
             }
         }
 

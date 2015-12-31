@@ -59,7 +59,7 @@ public class SetTaskActivity extends AppCompatActivity implements View.OnClickLi
                 if (chbox_delete_cur_tasks.isChecked()){
                     stringForSave = etTaskInputText;
                 }else{
-                    stringForSave = String.format("%s%s%s",//need to place an TASK_STRING_SEPARATOR after the first string
+                    stringForSave = String.format("%s%s%s",//need to place an TASK_STRING_SEPARATOR after the current string of tasks
                             sharedPreferences.getString("stringList", null),
                             stringSeparator,
                             etTaskInputText
@@ -69,10 +69,8 @@ public class SetTaskActivity extends AppCompatActivity implements View.OnClickLi
                 if (stringForSave != null && !stringForSave.equals("")){
                     putStringInSharedPreferences(stringForSave);
                 }
-
-                Intent intent = new Intent(SetTaskActivity.this, HomeActivity.class);
-                finish();
-                startActivity(intent);
+                // get back to previous activity in this case MainActivity
+                this.finish();
             } break;
 
             default: return;

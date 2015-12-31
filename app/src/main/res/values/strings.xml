@@ -24,4 +24,8 @@
     <string name="append_cur_tasks">Append Entered Tasks</string>
     <string name="delete_cur_tasks">Replace Whit Entered Tasks</string>
     <string name="btn_changeTasks_text">Change Tasks</string>
+    <string name="is_not_interrupted">" is not interrupted"</string>
+    <string name="is_interrupted">" is interrupted"</string>
+    <string name="duplicate_tasks_have_been_ingored">Duplicate tasks have been ignored!</string>
+    <string name="db_could_not_open">Could not insert any data in database. Could ot open database</string>
 </resources>
