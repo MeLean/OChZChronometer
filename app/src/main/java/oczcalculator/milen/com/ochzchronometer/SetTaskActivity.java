@@ -1,6 +1,5 @@
 package oczcalculator.milen.com.ochzchronometer;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -65,10 +64,14 @@ public class SetTaskActivity extends AppCompatActivity implements View.OnClickLi
                     // todo purify the method
                     // checks if current string ends whit stringSeparator
                     String preferencesString = sharedPreferences.getString(Utils.SHARED_PREFERENCES_STRING_NAME, null);
-                    String lastStringChar = preferencesString.substring(preferencesString.length() - 1);
-                    if (lastStringChar.equals(Utils.TASK_SEPARATOR)) {
-                        //deleting last task separator
-                        preferencesString = preferencesString.substring(0, preferencesString.length() - 1);
+                    String lastStringChar;
+                    if (preferencesString != null) {
+                        lastStringChar = preferencesString.substring(preferencesString.length() - 1);
+
+                        if (lastStringChar.equals(Utils.TASK_SEPARATOR)) {
+                            //deleting last task separator
+                            preferencesString = preferencesString.substring(0, preferencesString.length() - 1);
+                        }
                     }
 
                     stringForSave = String.format("%s%s%s",
@@ -97,13 +100,12 @@ public class SetTaskActivity extends AppCompatActivity implements View.OnClickLi
             }
             break;
 
-            default:
-                return;
+            default:return;
         }
     }
 
     private void putStringInSharedPreferences(String stringForSave) {
-        preferencesEditor.putString("stringList", stringForSave);
+        preferencesEditor.putString(Utils.SHARED_PREFERENCES_STRING_NAME, stringForSave);
         preferencesEditor.commit();
     }
 }

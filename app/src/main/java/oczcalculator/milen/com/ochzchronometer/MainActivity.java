@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private ListAdapter makeListAdapterFromString(String stringList) {
-
         tasksStringArray = stringList.trim().split(String.format("\\s*%s\\s*", Utils.TASK_SEPARATOR));
 
         ListAdapter tasksListAdapter = new ArrayAdapter<>(
