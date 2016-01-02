@@ -1,9 +1,7 @@
 package oczcalculator.milen.com.ochzchronometer;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
@@ -20,19 +18,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 
 import static android.widget.Toast.LENGTH_LONG;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemClickListener {
     private static String DEFAULT_TASK_NAMES_STRING = "Task 1; Task 2; Task 3;";
-    private static String TASK_SEPARATOR = ";";
     private boolean isThereTaskStarted = false;
     private Chronometer chronometer = null;
     private Button btnStartStop;
@@ -47,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<TaskEntity> taskMassiv;
     private String[] tasksStringArray;
     private String stringList;
-    private SharedPreferences namesSharedPreferences;
+    private SharedPreferences SharedPreferencesFile;
     private SharedPreferences.Editor editor;
     private DBHelper db;
 
@@ -62,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        stringList = namesSharedPreferences.getString("stringList", null);
-        if (stringList == null){
+        stringList = SharedPreferencesFile.getString(Utils.SHARED_PREFERENCES_STRING_NAME, null);
+        if (stringList == null) {
             stringList = DEFAULT_TASK_NAMES_STRING;
         }
 
@@ -73,12 +66,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
-        editor.putString("stringList", stringList);
+        editor.putString(Utils.SHARED_PREFERENCES_STRING_NAME, stringList);
         editor.commit();
     }
 
     private void initializeComponents() {
-        chronometer = (Chronometer)findViewById(R.id.chronometer);
+        // TODO make buttons menuItems
+        chronometer = (Chronometer) findViewById(R.id.chronometer);
         btnStartStop = (Button) findViewById(R.id.btnStartStop);
         btnInterruption = (Button) findViewById(R.id.btnInterruption);
         btnInterruption.setVisibility(View.INVISIBLE);
@@ -101,20 +95,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         taskMassiv = new ArrayList<TaskEntity>();
 
-        namesSharedPreferences = getSharedPreferences("ListViewTaskNames", 0);
-        editor = namesSharedPreferences.edit();
+        SharedPreferencesFile = getSharedPreferences(Utils.SHARED_PREFERENCES_FILE_NAME, 0);
+        editor = SharedPreferencesFile.edit();
         db = DBHelper.getInstance(this);
     }
 
     private ListAdapter makeListAdapterFromString(String stringList) {
 
-        tasksStringArray = stringList.trim().split(String.format("\\s*%s\\s*", TASK_SEPARATOR));
+        tasksStringArray = stringList.trim().split(String.format("\\s*%s\\s*", Utils.TASK_SEPARATOR));
 
         ListAdapter tasksListAdapter = new ArrayAdapter<>(
                 MainActivity.this,
                 android.R.layout.simple_expandable_list_item_1,
-                removeDuplicateOrEmptyTasks(tasksStringArray)
-                );
+                Utils.removeDuplicateOrEmptyTasks(tasksStringArray)
+        );
 
         return tasksListAdapter;
     }
@@ -122,8 +116,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
-            case R.id.btnStartStop :
+        switch (v.getId()) {
+            case R.id.btnStartStop:
                 if (isThereTaskStarted) {
                     stopTask(true);
                 } else {
@@ -141,33 +135,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }
                 }
-            break;
+                break;
 
-            case R.id.btnInterruption :
-                if(isThereTaskStarted){
+            case R.id.btnInterruption:
+                if (isThereTaskStarted) {
                     stopTask(false);
-                }else{
+                } else {
                     // on normal usage that should never show
-                    Toast.makeText(getApplicationContext(), R.string.note_start_task,
-                            LENGTH_LONG
-                    ).show();
-                }if(isThereTaskStarted){
-                stopTask(false);
-            }else{
-                // on normal usage that should never show
-                Toast.makeText(getApplicationContext(), R.string.note_start_task,
-                        LENGTH_LONG
-                ).show();
-            }
+                    Toast.makeText(getApplicationContext(), R.string.note_start_task, LENGTH_LONG).show();
+                }
+                if (isThereTaskStarted) {
+                    stopTask(false);
+                } else {
+                    // on normal usage that should never show
+                    Toast.makeText(getApplicationContext(), R.string.note_start_task,LENGTH_LONG).show();
+                }
+                break;
 
-            break;
-
-            case R.id.btnGetAllRecords :
+            case R.id.btnGetAllRecords:
                 String result = "";
+                //TODO ASINCTASK
                 try {
                     db.open();
                     taskMassiv = db.getAllTasks();
-                    db.open();
+                    db.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -178,12 +169,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intentAllRecords = new Intent(MainActivity.this, AllRecordsActivity.class);
                 intentAllRecords.putExtra("reports", result);
                 startActivity(intentAllRecords);
-            break;
+                break;
 
-            case R.id.btnGetReport :
-                //TODO make it asinc
-                Intent intentGetReport = new Intent(MainActivity.this, TasksReportActivity.class);
+            case R.id.btnGetReport:
                 String report = getString(R.string.head_of_table_report);
+                //TODO make it asinc
                 try {
                     db.open();
                     taskMassiv = db.getAllTasks();
@@ -196,17 +186,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     int timesOccur = 0;
                     long secondsTaskWorked = 0;
 
-                    for (TaskEntity task :  taskMassiv) {
+                    for (TaskEntity task : taskMassiv) {
                         boolean hasMatch = task.getTaskName().equalsIgnoreCase(taskString);
-                        if (hasMatch){
+                        if (hasMatch) {
                             secondsTaskWorked += task.getSecondsWorked();
-                            if (task.isNotInterrupted()){
+                            if (task.isNotInterrupted()) {
                                 timesOccur++;
                             }
                         }
                     }
 
-                    if (secondsTaskWorked != 0){
+                    if (secondsTaskWorked != 0) {
                         float averageTime = timesOccur != 0 ? (float) (secondsTaskWorked / timesOccur) : (float) secondsTaskWorked;
                         report += String.format("%s:\ttimes: %d\tavg: %.2f\n",
                                 taskString,
@@ -215,17 +205,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
 
+                Intent intentGetReport = new Intent(MainActivity.this, TasksReportActivity.class);
                 intentGetReport.putExtra("tasksStringArray", report);
                 startActivity(intentGetReport);
-            break;
+                break;
 
-            case R.id.btnChangeTasks :
+            case R.id.btnChangeTasks:
                 Intent intent = new Intent(MainActivity.this, SetTaskActivity.class);
-                intent.putExtra("stringsSeparator", TASK_SEPARATOR);
                 startActivity(intent);
-            break;
+                break;
 
-            default: return;
+            default:
+                Toast.makeText(MainActivity.this, R.string.dont_know_what_to_do, Toast.LENGTH_SHORT).show();
+            return;
         }
 
     }
@@ -254,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         etEmployeeName.setFocusable(false);
     }
 
-    private void stopTask(boolean isNotInterrupted){
+    private void stopTask(boolean isNotInterrupted) {
         chronometer.stop();
         addDataToDB(isNotInterrupted);
         chronometer.setBase(SystemClock.elapsedRealtime());
@@ -266,16 +258,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         twTaskMessage_area.setText(R.string.text_nothing);
     }
 
-    private void addDataToDB(boolean isNotInterrupted){
-        long secondsElapsed = (SystemClock.elapsedRealtime() - chronometer.getBase())/1000;
+    private void addDataToDB(boolean isNotInterrupted) {
+        long secondsElapsed = (SystemClock.elapsedRealtime() - chronometer.getBase()) / 1000;
         TaskEntity entity = new TaskEntity(
                 etEmployeeName.getText().toString(),
                 twTaskMessage_area.getText().toString(),
                 secondsElapsed,
                 isNotInterrupted,
-                getDateAsStringInFormat(getString(R.string.date_time_pattern))
+                Utils.getDateAsString(getString(R.string.date_time_pattern))
         );
         try {
+            //TODO ASINCTASK
             db.open();
             db.addTask(entity);
             db.close();
@@ -283,37 +276,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
-        if (isNotInterrupted){
+        // simple notification
+        if (isNotInterrupted) {
             makeToast(getString(R.string.is_not_interrupted), secondsElapsed);
-        }else{
+        } else {
             makeToast(getString(R.string.is_interrupted), secondsElapsed);
         }
     }
 
-    private String[] removeDuplicateOrEmptyTasks(String[] tasksStringArray){
-        HashSet<String> set = new HashSet<String>();
-        for(int i = tasksStringArray.length - 1; i >= 0; i-- ) {
-            String task = tasksStringArray[i];
-            if(task.length() > 0){
-               set.add(task);
-            }
-        }
-
-        String[] result = set.toArray(new String[set.size()]);
-        Arrays.sort(result); // sorting the array for fast task finding
-        return result;
-    }
-
     //TODO decide if you remove this notification
-    private void makeToast(String interruptionText, long secondsElapsed){
+    private void makeToast(String interruptionText, long secondsElapsed) {
         Toast.makeText(getApplicationContext(), "Seconds elapsed: " + secondsElapsed + interruptionText,
                 Toast.LENGTH_SHORT).show();
     }
 
-    private String getDateAsStringInFormat(String pattern) {
-        String result;
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        result = formatter.format(Calendar.getInstance().getTime());
-        return result;
-    }
+
 }

@@ -16,7 +16,7 @@ public class TasksReportActivity extends AppCompatActivity {
         String taskReportString = taskReport.getString("tasksStringArray");
 
         TextView twTaskReport = (TextView) findViewById(R.id.twTaskReport);
-        if (!(taskReportString.equals(getString(R.string.head_of_table_report)))){
+        if (!(taskReportString.equals(getString(R.string.head_of_table_report)))) {
             twTaskReport.setMovementMethod(new ScrollingMovementMethod());
             twTaskReport.setText(taskReportString);
         }

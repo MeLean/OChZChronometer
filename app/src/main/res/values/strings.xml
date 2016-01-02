@@ -20,13 +20,14 @@
     <string name="head_of_table_report">Report:\n</string>
     <string name="title_activity_set_task">SetTaskActivity</string>
     <string name="delete_tasks">Delete current tasks</string>
-    <string name="first_part_inputTasks_hint">Type taska separated by </string>
+    <string name="first_part_inputTasks_hint">Type tasks separated by </string>
     <string name="append_cur_tasks">Append Entered Tasks</string>
     <string name="delete_cur_tasks">Replace Whit Entered Tasks</string>
     <string name="btn_changeTasks_text">Change Tasks</string>
     <string name="is_not_interrupted">" is not interrupted"</string>
     <string name="is_interrupted">" is interrupted"</string>
-    <string name="duplicate_tasks_have_been_ingored">Duplicate tasks have been ignored!</string>
-    <string name="db_could_not_open">Could not insert any data in database. Could ot open database</string>
+    <string name="db_could_not_open">Could not insert any data in database. Could not open database!</string>
     <string name="date_time_pattern">yyyy/MM/dd HH:mm:ss</string>
+    <string name="no_task_for_loading">There is no task for loading!</string>
+    <string name="dont_know_what_to_do">I don`t know what to do!</string>
 </resources>

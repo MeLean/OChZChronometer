@@ -11,11 +11,11 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class DBHelper extends SQLiteOpenHelper{
+public class DBHelper extends SQLiteOpenHelper {
     //singleton pattern for DB
     private static DBHelper sInstance;
 
-    public static synchronized DBHelper getInstance(Context context){
+    public static synchronized DBHelper getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new DBHelper(context.getApplicationContext());
         }
@@ -33,6 +33,7 @@ public class DBHelper extends SQLiteOpenHelper{
     static final protected String TABLE_COLUMN_IS_INTERRUPTED = "isInterrupted";
     static final protected String TABLE_COLUMN_DATE_ADDED = "dateAdded";
     protected SQLiteDatabase db;
+
     private DBHelper(Context context) {
         super(context, DB_NAME, null, DB_CURRENT_VERSION);
     }
@@ -41,12 +42,12 @@ public class DBHelper extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         String sqlCommand = String.format(
                 "create table %s " +
-                "(%s integer primary key autoincrement, " +
-                "%s text not null, " +
-                "%s text not null, " +
-                "%s integer not null, " +
-                "%s integer not null, " +
-                "%s text not null);",
+                        "(%s integer primary key autoincrement, " +
+                        "%s text not null, " +
+                        "%s text not null, " +
+                        "%s integer not null, " +
+                        "%s integer not null, " +
+                        "%s text not null);",
 
                 TABLE_NAME,
                 TABLE_COLUMN_ID,
@@ -65,15 +66,15 @@ public class DBHelper extends SQLiteOpenHelper{
         return;
     }
 
-    public void open() throws SQLException{
+    public void open() throws SQLException {
         db = getWritableDatabase();
     }
 
-    public void close(){
+    public void close() {
         db.close();
     }
 
-    public void addTask(TaskEntity task){
+    public void addTask(TaskEntity task) {
         try {
             open();
         } catch (SQLException e) {
@@ -101,12 +102,12 @@ public class DBHelper extends SQLiteOpenHelper{
         };
 
         Cursor taskCursor = this.db.query(TABLE_NAME, columns, null, null, null, null, null);
-        if (taskCursor == null){
+        if (taskCursor == null) {
             return null;
         }
 
         ArrayList<TaskEntity> tasksFromDB = new ArrayList<>();
-        if(taskCursor.moveToFirst()) {
+        if (taskCursor.moveToFirst()) {
             do {
                 String employeeName = taskCursor.getString(taskCursor.getColumnIndex(TABLE_COLUMN_EMPLOYEE_NAME));
                 int id = taskCursor.getInt(taskCursor.getColumnIndex(TABLE_COLUMN_ID));

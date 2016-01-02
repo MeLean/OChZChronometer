@@ -1,6 +1,8 @@
 package oczcalculator.milen.com.ochzchronometer;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 public class TaskEntity {
 
     private int _id;
@@ -11,7 +13,6 @@ public class TaskEntity {
     private String dateAdded;
 
     private static final int DEFAULT_ID = 0;
-
 
 
     public TaskEntity(String employeeName, int taskId, String taskName, long secondsWorked, boolean isNotInterrupted, String dateAdded) {
