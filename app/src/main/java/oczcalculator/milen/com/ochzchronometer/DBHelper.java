@@ -25,14 +25,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
     static final private String DB_NAME = "OChZDatabase.db";
     static final private int DB_CURRENT_VERSION = 1;
-    static final protected String TABLE_NAME = "tasks";
-    static final protected String TABLE_COLUMN_ID = "_id";
-    static final protected String TABLE_COLUMN_EMPLOYEE_NAME = "employeeName";
-    static final protected String TABLE_COLUMN_TASK_NAME = "taskName";
-    static final protected String TABLE_COLUMN_SECONDS_WORKED = "secondsWorked";
-    static final protected String TABLE_COLUMN_IS_INTERRUPTED = "isInterrupted";
-    static final protected String TABLE_COLUMN_DATE_ADDED = "dateAdded";
-    protected SQLiteDatabase db;
+    static final String TABLE_NAME = "tasks";
+    static final String TABLE_COLUMN_ID = "_id";
+    static final String TABLE_COLUMN_EMPLOYEE_NAME = "employeeName";
+    static final String TABLE_COLUMN_TASK_NAME = "taskName";
+    static final String TABLE_COLUMN_SECONDS_WORKED = "secondsWorked";
+    static final String TABLE_COLUMN_IS_INTERRUPTED = "isInterrupted";
+    static final String TABLE_COLUMN_DATE_ADDED = "dateAdded";
+    SQLiteDatabase db;
 
     private DBHelper(Context context) {
         super(context, DB_NAME, null, DB_CURRENT_VERSION);
@@ -119,6 +119,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 tasksFromDB.add(new TaskEntity(employeeName, id, taskName, secondsWorked, isNotInterrupted, dateAdded));
             } while (taskCursor.moveToNext());
         }
+
         return tasksFromDB;
     }
+
+    public void deleteAllTasks(){
+        db.delete(TABLE_NAME, null,null);
+    }
+
+
 }
