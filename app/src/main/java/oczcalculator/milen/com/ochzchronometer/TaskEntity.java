@@ -1,8 +1,5 @@
 package oczcalculator.milen.com.ochzchronometer;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class TaskEntity {
 
     private int _id;

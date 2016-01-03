@@ -96,11 +96,12 @@ public class SetTaskActivity extends AppCompatActivity implements View.OnClickLi
                     return;
                 }
 
-                etTaskInput.setText(preferenceString);
+                String pureTasksString = Utils.purifyString(preferenceString);
+                etTaskInput.setText(pureTasksString);
             }
             break;
 
-            default:return;
+            default:break;
         }
     }
 

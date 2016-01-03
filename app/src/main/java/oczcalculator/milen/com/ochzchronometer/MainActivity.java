@@ -19,8 +19,6 @@ import android.widget.Toast;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 
 import static android.widget.Toast.LENGTH_LONG;
 
@@ -101,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private ListAdapter makeListAdapterFromString(String stringList) {
-        tasksStringArray = stringList.trim().split(String.format("\\s*%s\\s*", Utils.TASK_SEPARATOR));
+        tasksStringArray = Utils.splitBySeparator(stringList);
 
         ListAdapter tasksListAdapter = new ArrayAdapter<>(
                 MainActivity.this,
@@ -171,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btnGetReport:
-                String report = getString(R.string.head_of_table_report);
+
                 //TODO make it asinc
                 try {
                     db.open();
@@ -180,29 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                String[] uniqueTasks = new HashSet<String>(Arrays.asList(tasksStringArray)).toArray(new String[0]);
-                for (String taskString : uniqueTasks) {
-                    int timesOccur = 0;
-                    long secondsTaskWorked = 0;
-
-                    for (TaskEntity task : taskMassiv) {
-                        boolean hasMatch = task.getTaskName().equalsIgnoreCase(taskString);
-                        if (hasMatch) {
-                            secondsTaskWorked += task.getSecondsWorked();
-                            if (task.isNotInterrupted()) {
-                                timesOccur++;
-                            }
-                        }
-                    }
-
-                    if (secondsTaskWorked != 0) {
-                        float averageTime = timesOccur != 0 ? (float) (secondsTaskWorked / timesOccur) : (float) secondsTaskWorked;
-                        report += String.format("%s:\ttimes: %d\tavg: %.2f\n",
-                                taskString,
-                                timesOccur,
-                                averageTime);
-                    }
-                }
+                String report = Utils.makeStringReport(tasksStringArray, taskMassiv);
 
                 Intent intentGetReport = new Intent(MainActivity.this, TasksReportActivity.class);
                 intentGetReport.putExtra("tasksStringArray", report);
@@ -216,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             default:
                 Toast.makeText(MainActivity.this, R.string.dont_know_what_to_do, Toast.LENGTH_SHORT).show();
-            return;
+            break;
         }
 
     }
