@@ -1,6 +1,7 @@
 package oczcalculator.milen.com.ochzchronometer;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,10 +40,12 @@ public class Utils {
         return result;
     }
 
+    @NonNull
     static String[] splitBySeparator(String str) {
         return str.trim().split(String.format("\\s*%s\\s*", Utils.TASK_SEPARATOR));
     }
 
+    @NonNull
     static String purifyString(String preferenceString) {
         String[] pureTasks = Utils.removeDuplicateOrEmptyTasks(Utils.splitBySeparator(preferenceString));
         StringBuilder result = new StringBuilder();
@@ -54,6 +57,7 @@ public class Utils {
         return result.toString();
     }
 
+    @NonNull
     static String makeStringReport(Context context, String[] tasksStringArray, ArrayList<TaskEntity> taskMassiv) {
         StringBuilder report = new StringBuilder();
         report.append(context.getString(R.string.head_of_table_report));

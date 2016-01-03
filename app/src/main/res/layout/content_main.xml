@@ -76,32 +76,6 @@
             android:layout_marginTop="10dp"
             android:layout_alignParentLeft="true" />
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btnGetAllRecords_text"
-            android:id="@+id/btnGetAllRecords"
-            android:layout_marginTop="20dp"
-            android:layout_weight="0.15" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btnGetReport_text"
-            android:id="@+id/btnGetReport"
-            android:layout_marginTop="10dp" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_changeTasks_text"
-            android:id="@+id/btnChangeTasks"
-            android:singleLine="false"
-            android:layout_marginTop="10dp" />
-
     </LinearLayout>
 
     <LinearLayout

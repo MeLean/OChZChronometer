@@ -1,33 +1,51 @@
 <resources>
+
     <string name="app_name">OChZChronometer</string>
-    <string name="action_settings">Settings</string>
+
+    //MainActivity
     <string name="start_text">Start Task</string>
     <string name="stop_text">Finish Task</string>
     <string name="interruption_text">Interrupt Task</string>
     <string name="text_nothing">nothing!</string>
     <string name="workingOn_label">working on:</string>
     <string name="task_chosen_text">task chosen:</string>
-    <string name="btnGetAllRecords_text">Get All Records</string>
-    <string name="title_activity_all_records">All Records</string>
-    <string name="btnGetReport_text">Get Report</string>
     <string name="note_start_task">Please, chose a task!</string>
     <string name="employee_name_hint">Enter a name!</string>
     <string name="error_employee_name_text">Please, enter an employee name!</string>
+
+    //actions in MainActivity menu
+    <string name="action_get_report">Get Report</string>
+    <string name="action_get_all_entities">Get All Entities</string>
+    <string name="action_change_tasks">Change Tasks</string>
+    <string name="action_clear_db">Clear Database</string>
+
+    //activities titles
+    <string name="title_activity_all_reports">All Records</string>
+    <string name="title_activity_all_entities">All Entities</string>
+    <string name="title_activity_tasks_report">Report</string>
+    <string name="title_activity_set_task">Set Tasks</string>
+
     <string name="no_entities_text">There is no entity!</string>
     <string name="empty_string"></string>
-    <string name="title_activity_all_reports">All Reports</string>
-    <string name="title_activity_tasks_report">Report</string>
     <string name="head_of_table_report">Report:\n</string>
-    <string name="title_activity_set_task">SetTaskActivity</string>
+
+    //actions in SetTasksActivity menu
+    <string name="action_load_cur_tasks">Load available tasks</string>
+
+
+
+    //SetTasksActivity
     <string name="delete_tasks">Delete current tasks</string>
     <string name="first_part_inputTasks_hint">Type tasks separated by </string>
     <string name="append_cur_tasks">Append Entered Tasks</string>
     <string name="delete_cur_tasks">Replace Whit Entered Tasks</string>
-    <string name="btn_changeTasks_text">Change Tasks</string>
     <string name="is_not_interrupted">" is not interrupted"</string>
     <string name="is_interrupted">" is interrupted"</string>
     <string name="db_could_not_open">Could not insert any data in database. Could not open database!</string>
     <string name="date_time_pattern">yyyy/MM/dd HH:mm:ss</string>
     <string name="no_task_for_loading">There is no task for loading!</string>
     <string name="dont_know_what_to_do">I don`t know what to do!</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="delete_db_alert">All records in database will be deleted. Are you sure?</string>
 </resources>

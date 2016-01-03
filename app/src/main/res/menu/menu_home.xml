@@ -1,6 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".home">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_get_report" android:title="@string/action_get_report"
+        android:orderInCategory="110" app:showAsAction="never" />
+    <item android:id="@+id/action_get_all_entities" android:title="@string/action_get_all_entities"
+        android:orderInCategory="120" app:showAsAction="never" />
+    <item android:id="@+id/action_change_tasks" android:title="@string/action_change_tasks"
+        android:orderInCategory="130" app:showAsAction="never" />
+    <item android:id="@+id/action_clear_db" android:title="@string/action_clear_db"
+        android:orderInCategory="140" app:showAsAction="never" />
 </menu>

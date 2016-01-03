@@ -38,7 +38,7 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".SetTaskActivity"
+            android:name=".SetTasksActivity"
             android:label="@string/title_activity_set_task"
             android:parentActivityName=".MainActivity"
             android:noHistory="true"

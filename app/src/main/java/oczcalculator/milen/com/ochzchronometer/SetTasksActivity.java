@@ -1,19 +1,25 @@
 package oczcalculator.milen.com.ochzchronometer;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.sql.SQLException;
 
-public class SetTaskActivity extends AppCompatActivity implements View.OnClickListener {
+
+public class SetTasksActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btn_set_tasks;
-    private Button btn_load_cur_tasks;
     private EditText etTaskInput;
     private CheckBox chbox_delete_cur_tasks;
     private SharedPreferences sharedPreferences;
@@ -22,14 +28,15 @@ public class SetTaskActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_task);
+        setContentView(R.layout.activity_set_tasks);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_set_tasks);
+        setSupportActionBar(toolbar);
+
         btn_set_tasks = (Button) findViewById(R.id.btn_set_tasks);
-        btn_load_cur_tasks = (Button) findViewById(R.id.btn_load_cur_tasks);
         etTaskInput = (EditText) findViewById(R.id.etTaskInput);
         chbox_delete_cur_tasks = (CheckBox) findViewById(R.id.chbox_delete_cur_tasks);
 
         btn_set_tasks.setOnClickListener(this);
-        btn_load_cur_tasks.setOnClickListener(this);
         chbox_delete_cur_tasks.setOnClickListener(this);
 
         etTaskInput.setHint(
@@ -88,25 +95,41 @@ public class SetTaskActivity extends AppCompatActivity implements View.OnClickLi
                 this.finish();
             }
             break;
-
-            case R.id.btn_load_cur_tasks: {
-                String preferenceString = sharedPreferences.getString(Utils.SHARED_PREFERENCES_STRING_NAME, null);
-                if (preferenceString == null) {
-                    Toast.makeText(SetTaskActivity.this, R.string.no_task_for_loading, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                String pureTasksString = Utils.purifyString(preferenceString);
-                etTaskInput.setText(pureTasksString);
-            }
-            break;
-
-            default:break;
+            default:
+                Toast.makeText(SetTasksActivity.this, R.string.dont_know_what_to_do, Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
     private void putStringInSharedPreferences(String stringForSave) {
         preferencesEditor.putString(Utils.SHARED_PREFERENCES_STRING_NAME, stringForSave);
         preferencesEditor.commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_set_tasks, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_load_cur_tasks:
+                String preferenceString = sharedPreferences.getString(Utils.SHARED_PREFERENCES_STRING_NAME, null);
+                if (preferenceString == null) {
+                    Toast.makeText(SetTasksActivity.this, R.string.no_task_for_loading, Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
+                String pureTasksString = Utils.purifyString(preferenceString);
+                etTaskInput.setText(pureTasksString);
+                break;
+
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

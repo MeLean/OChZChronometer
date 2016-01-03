@@ -8,7 +8,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_set_task"
-    tools:context="oczcalculator.milen.com.ochzchronometer.SetTaskActivity">
+    tools:context="oczcalculator.milen.com.ochzchronometer.SetTasksActivity">
 
     <EditText
         android:layout_width="fill_parent"
@@ -34,14 +34,5 @@
         android:layout_below="@+id/chbox_delete_cur_tasks"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="22dp" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Load Current Tasks"
-        android:id="@+id/btn_load_cur_tasks"
-        android:layout_below="@+id/btn_set_tasks"
-        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

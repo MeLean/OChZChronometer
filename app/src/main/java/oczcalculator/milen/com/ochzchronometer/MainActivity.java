@@ -1,11 +1,16 @@
 package oczcalculator.milen.com.ochzchronometer;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,6 +21,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,9 +34,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Chronometer chronometer = null;
     private Button btnStartStop;
     private Button btnInterruption;
-    private Button btnGetAllRecords;
-    private Button btnGetReport;
-    private Button btnChangeTasks;
     private TextView twLabelWorkingOn;
     private TextView twTaskMessage_area;
     private EditText etEmployeeName;
@@ -45,7 +48,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
 
         initializeComponents();
     }
@@ -74,15 +79,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnStartStop = (Button) findViewById(R.id.btnStartStop);
         btnInterruption = (Button) findViewById(R.id.btnInterruption);
         btnInterruption.setVisibility(View.INVISIBLE);
-        btnGetAllRecords = (Button) findViewById(R.id.btnGetAllRecords);
-        btnGetReport = (Button) findViewById(R.id.btnGetReport);
-        btnChangeTasks = (Button) findViewById(R.id.btnChangeTasks);
 
         btnStartStop.setOnClickListener(this);
         btnInterruption.setOnClickListener(this);
-        btnGetAllRecords.setOnClickListener(this);
-        btnGetReport.setOnClickListener(this);
-        btnChangeTasks.setOnClickListener(this);
 
         twTaskMessage_area = (TextView) findViewById(R.id.twTaskMessage_area);
         twLabelWorkingOn = (TextView) findViewById(R.id.twLabelWorkingOn);
@@ -108,6 +107,99 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         );
 
         return tasksListAdapter;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+
+            case R.id.action_get_report:
+
+                //TODO make it asinc
+                try {
+                    db.open();
+                    taskMassiv = db.getAllTasks();
+                    db.open();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                String report = Utils.makeStringReport(this, tasksStringArray, taskMassiv);
+
+                Intent intentGetReport = new Intent(MainActivity.this, TasksReportActivity.class);
+                intentGetReport.putExtra("tasksStringArray", report);
+                startActivity(intentGetReport);
+                break;
+
+            case R.id.action_get_all_entities:
+                StringBuilder result = new StringBuilder();
+                //TODO ASINCTASK
+                try {
+                    db.open();
+                    taskMassiv = db.getAllTasks();
+                    db.close();
+                } catch (Exception e) {//TODO better exceptionCatch
+                    e.printStackTrace();
+                }
+
+                for (TaskEntity task : taskMassiv) {
+                    result.append(task.toString());
+                    result.append("\n\n");
+                }
+
+                Intent intentAllRecords = new Intent(MainActivity.this, AllRecordsActivity.class);
+                intentAllRecords.putExtra("reports", result.toString());
+                startActivity(intentAllRecords);
+                break;
+
+
+
+            case R.id.action_change_tasks:
+                Intent intent = new Intent(MainActivity.this, SetTasksActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.action_clear_db:
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                try {
+                                    db.open();
+                                    db.deleteAllTasks();
+                                    db.close();
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(getString(R.string.delete_db_alert));
+                builder.setPositiveButton(getString(R.string.dialog_yes), dialogClickListener);
+                builder.setNegativeButton(getString(R.string.dialog_no), dialogClickListener);
+                builder.show();
+                break;
+
+            default:
+                Toast.makeText(MainActivity.this, R.string.dont_know_what_to_do, Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -149,47 +241,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
 
-            case R.id.btnGetAllRecords:
-                String result = "";
-                //TODO ASINCTASK
-                try {
-                    db.open();
-                    taskMassiv = db.getAllTasks();
-                    db.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                for (TaskEntity task : taskMassiv) {
-                    result += task.toString() + "\n\n";
-                }
-
-                Intent intentAllRecords = new Intent(MainActivity.this, AllRecordsActivity.class);
-                intentAllRecords.putExtra("reports", result);
-                startActivity(intentAllRecords);
-                break;
-
-            case R.id.btnGetReport:
-
-                //TODO make it asinc
-                try {
-                    db.open();
-                    taskMassiv = db.getAllTasks();
-                    db.open();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                String report = Utils.makeStringReport(this, tasksStringArray, taskMassiv);
-
-                Intent intentGetReport = new Intent(MainActivity.this, TasksReportActivity.class);
-                intentGetReport.putExtra("tasksStringArray", report);
-                startActivity(intentGetReport);
-                break;
-
-            case R.id.btnChangeTasks:
-                Intent intent = new Intent(MainActivity.this, SetTaskActivity.class);
-                startActivity(intent);
-                break;
-
             default:
                 Toast.makeText(MainActivity.this, R.string.dont_know_what_to_do, Toast.LENGTH_SHORT).show();
             break;
@@ -216,8 +267,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnStartStop.setText(R.string.stop_text);
         isThereTaskStarted = true;
         btnInterruption.setVisibility(View.VISIBLE);
-        btnGetAllRecords.setVisibility(View.INVISIBLE);
-        btnGetReport.setVisibility(View.INVISIBLE);
         etEmployeeName.setFocusable(false);
     }
 
@@ -228,8 +277,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnStartStop.setText(R.string.start_text);
         isThereTaskStarted = false;
         btnInterruption.setVisibility(View.INVISIBLE);
-        btnGetAllRecords.setVisibility(View.VISIBLE);
-        btnGetReport.setVisibility(View.VISIBLE);
         twTaskMessage_area.setText(R.string.text_nothing);
     }
 
