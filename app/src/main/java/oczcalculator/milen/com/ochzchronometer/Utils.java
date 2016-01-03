@@ -1,5 +1,7 @@
 package oczcalculator.milen.com.ochzchronometer;
 
+import android.content.Context;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,11 +9,14 @@ import java.util.Calendar;
 import java.util.HashSet;
 
 public class Utils {
-   static String SHARED_PREFERENCES_FILE_NAME = "ListViewTaskNames";
-   static String SHARED_PREFERENCES_STRING_NAME = "stringList";
-   static String TASK_SEPARATOR = ";";
+    static String SHARED_PREFERENCES_FILE_NAME = "ListViewTaskNames";
+    static String SHARED_PREFERENCES_STRING_NAME = "stringList";
+    static String TASK_SEPARATOR = ";";
 
-    private Utils(){};
+    private Utils() {
+    }
+
+    ;
 
     static String getDateAsString(String pattern) {
         String result;
@@ -33,6 +38,7 @@ public class Utils {
         Arrays.sort(result);
         return result;
     }
+
     static String[] splitBySeparator(String str) {
         return str.trim().split(String.format("\\s*%s\\s*", Utils.TASK_SEPARATOR));
     }
@@ -42,14 +48,15 @@ public class Utils {
         StringBuilder result = new StringBuilder();
         for (String task : pureTasks) {
             result.append(task);
-            result.append( Utils.TASK_SEPARATOR);
+            result.append(Utils.TASK_SEPARATOR);
         }
 
         return result.toString();
     }
 
-    static String makeStringReport(String[] tasksStringArray, ArrayList<TaskEntity> taskMassiv) {
-        StringBuilder report = new StringBuilder (R.string.head_of_table_report);
+    static String makeStringReport(Context context, String[] tasksStringArray, ArrayList<TaskEntity> taskMassiv) {
+        StringBuilder report = new StringBuilder();
+        report.append(context.getString(R.string.head_of_table_report));
         String[] uniqueTasks = new HashSet<String>(Arrays.asList(tasksStringArray)).toArray(new String[0]);
         for (String taskString : uniqueTasks) {
             int timesOccur = 0;

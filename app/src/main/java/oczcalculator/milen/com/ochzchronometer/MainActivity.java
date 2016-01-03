@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                String report = Utils.makeStringReport(tasksStringArray, taskMassiv);
+                String report = Utils.makeStringReport(this, tasksStringArray, taskMassiv);
 
                 Intent intentGetReport = new Intent(MainActivity.this, TasksReportActivity.class);
                 intentGetReport.putExtra("tasksStringArray", report);
