@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class DBHelper extends SQLiteOpenHelper {
     //singleton pattern for DB
@@ -41,7 +40,8 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sqlCommand = String.format(
-                "create table %s " +
+                "create " +
+                        "table %s " +
                         "(%s integer primary key autoincrement, " +
                         "%s text not null, " +
                         "%s text not null, " +
@@ -63,7 +63,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        return;
+        db.execSQL(String.format("drop table if exist '%s'", TABLE_NAME));
+        onCreate(db);
     }
 
     public void open() throws SQLException {
@@ -123,8 +124,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return tasksFromDB;
     }
 
-    public void deleteAllTasks(){
-        db.delete(TABLE_NAME, null,null);
+    public void deleteAllTasks() {
+        db.delete(TABLE_NAME, null, null);
     }
 
 
