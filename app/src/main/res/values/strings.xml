@@ -48,4 +48,5 @@
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
     <string name="delete_db_alert">All records in database will be deleted. Are you sure?</string>
+    <string name="two_new_rows">\n\n</string>
 </resources>

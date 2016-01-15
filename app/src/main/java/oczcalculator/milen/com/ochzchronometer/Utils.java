@@ -10,14 +10,14 @@ import java.util.Calendar;
 import java.util.HashSet;
 
 public class Utils {
+    static String GET_ALL_REPORTS_EXTRA_STRING = "reports";
+    static String GET_TASKS_REPORT_EXTRA_STRING = "tasksStringArray";
     static String SHARED_PREFERENCES_FILE_NAME = "ListViewTaskNames";
     static String SHARED_PREFERENCES_STRING_NAME = "stringList";
     static String TASK_SEPARATOR = ";";
 
     private Utils() {
     }
-
-    ;
 
     static String getDateAsString(String pattern) {
         String result;
@@ -58,10 +58,9 @@ public class Utils {
     }
 
     @NonNull
-    static String makeStringReport(Context context, String[] tasksStringArray, ArrayList<TaskEntity> taskMassiv) {
+    static String makeStringReport(String[] tasksStringArray, ArrayList<TaskEntity> taskMassiv) {
         StringBuilder report = new StringBuilder();
-        report.append(context.getString(R.string.head_of_table_report));
-        String[] uniqueTasks = new HashSet<String>(Arrays.asList(tasksStringArray)).toArray(new String[0]);
+        String[] uniqueTasks = new HashSet<>(Arrays.asList(tasksStringArray)).toArray(new String[0]);
         for (String taskString : uniqueTasks) {
             int timesOccur = 0;
             long secondsTaskWorked = 0;

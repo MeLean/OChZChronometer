@@ -1,5 +1,4 @@
 package oczcalculator.milen.com.ochzchronometer;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
@@ -15,11 +14,13 @@ public class AllRecordsActivity extends AppCompatActivity {
 
         TextView twReports = (TextView) findViewById(R.id.twReports);
         Bundle getReports = getIntent().getExtras();
-        String reports = getReports.getString("reports");
+        String reports = getReports.getString(Utils.GET_ALL_REPORTS_EXTRA_STRING);
 
         if (!(reports.equals(""))){
             twReports.setMovementMethod(new ScrollingMovementMethod());
             twReports.setText(reports);
+        }else{
+            twReports.setText(getString(R.string.no_entities_text));
         }
     }
 }

@@ -13,12 +13,14 @@ public class TasksReportActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tasks_report);
 
         Bundle taskReport = getIntent().getExtras();
-        String taskReportString = taskReport.getString("tasksStringArray");
+        String taskReportString = taskReport.getString(Utils.GET_TASKS_REPORT_EXTRA_STRING);
 
         TextView twTaskReport = (TextView) findViewById(R.id.twTaskReport);
-        if (!(taskReportString.equals(getString(R.string.head_of_table_report)))) {
+        if (!(taskReportString.equals(""))) {
             twTaskReport.setMovementMethod(new ScrollingMovementMethod());
             twTaskReport.setText(taskReportString);
+        }else{
+            twTaskReport.setText(getString(R.string.no_entities_text));
         }
     }
 }

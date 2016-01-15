@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initializeComponents() {
-        // TODO make buttons menuItems
         chronometer = (Chronometer) findViewById(R.id.chronometer);
         btnStartStop = (Button) findViewById(R.id.btnStartStop);
         btnInterruption = (Button) findViewById(R.id.btnInterruption);
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         lwTasks.setOnItemClickListener(this);
 
-        taskMassiv = new ArrayList<TaskEntity>();
+        taskMassiv = new ArrayList<>();
 
         SharedPreferencesFile = getSharedPreferences(Utils.SHARED_PREFERENCES_FILE_NAME, 0);
         editor = SharedPreferencesFile.edit();
@@ -123,18 +122,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.action_get_report:
 
-                //TODO make it asinc
-                try {
-                    db.open();
-                    taskMassiv = db.getAllTasks();
-                    db.open();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                String report = Utils.makeStringReport(this, tasksStringArray, taskMassiv);
+
+
+                String report = Utils.makeStringReport(tasksStringArray, taskMassiv);
 
                 Intent intentGetReport = new Intent(MainActivity.this, TasksReportActivity.class);
-                intentGetReport.putExtra("tasksStringArray", report);
+                intentGetReport.putExtra(Utils.GET_TASKS_REPORT_EXTRA_STRING, report);
                 startActivity(intentGetReport);
                 break;
 
@@ -151,11 +144,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 for (TaskEntity task : taskMassiv) {
                     result.append(task.toString());
-                    result.append("\n\n");
+                    result.append(getString(R.string.two_new_rows));
                 }
 
                 Intent intentAllRecords = new Intent(MainActivity.this, AllRecordsActivity.class);
-                intentAllRecords.putExtra("reports", result.toString());
+                intentAllRecords.putExtra(Utils.GET_ALL_REPORTS_EXTRA_STRING, result.toString());
                 startActivity(intentAllRecords);
                 break;
 
@@ -195,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             default:
-                Toast.makeText(MainActivity.this, R.string.dont_know_what_to_do, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.dont_know_what_to_do), Toast.LENGTH_SHORT).show();
                 break;
         }
 
@@ -308,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //TODO decide if you remove this notification
     private void makeToast(String interruptionText, long secondsElapsed) {
-        Toast.makeText(getApplicationContext(), "Seconds elapsed: " + secondsElapsed + interruptionText,
+        Toast.makeText(getApplicationContext(), "seconds elapsed: " + secondsElapsed + interruptionText,
                 Toast.LENGTH_SHORT).show();
     }
 
