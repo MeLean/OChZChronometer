@@ -75,13 +75,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addTask(TaskEntity task) {
-        try {
-            open();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void addTask(TaskEntity task) throws SQLException {
 
+        open();
         ContentValues contentValues = new ContentValues();
         contentValues.put(TABLE_COLUMN_EMPLOYEE_NAME, task.getEmployee());
         contentValues.put(TABLE_COLUMN_TASK_NAME, task.getTaskName());
@@ -90,9 +86,10 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(TABLE_COLUMN_DATE_ADDED, String.valueOf(task.getDateAdded()));
 
         this.db.insert(TABLE_NAME, null, contentValues);
+        close();
     }
 
-    public ArrayList<TaskEntity> getAllTasks() throws ParseException {
+    public ArrayList<TaskEntity> getAllTasks() throws ParseException, SQLException {
         String[] columns = new String[]{
                 TABLE_COLUMN_ID,
                 TABLE_COLUMN_EMPLOYEE_NAME,
@@ -102,6 +99,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 TABLE_COLUMN_DATE_ADDED
         };
 
+        open();
         Cursor taskCursor = this.db.query(TABLE_NAME, columns, null, null, null, null, null);
         if (taskCursor == null) {
             return null;
@@ -121,12 +119,13 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (taskCursor.moveToNext());
         }
 
+        close();
         return tasksFromDB;
     }
 
-    public void deleteAllTasks() {
+    public void deleteAllTasks() throws SQLException {
+        open();
         db.delete(TABLE_NAME, null, null);
+        close();
     }
-
-
 }

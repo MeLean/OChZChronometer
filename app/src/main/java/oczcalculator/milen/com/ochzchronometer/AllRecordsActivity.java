@@ -16,7 +16,8 @@ public class AllRecordsActivity extends AppCompatActivity {
         Bundle getReports = getIntent().getExtras();
         String reports = getReports.getString(Utils.GET_ALL_REPORTS_EXTRA_STRING);
 
-        if (!(reports.equals(""))){
+
+        if (reports != null && !(reports.equals(""))){
             twReports.setMovementMethod(new ScrollingMovementMethod());
             twReports.setText(reports);
         }else{

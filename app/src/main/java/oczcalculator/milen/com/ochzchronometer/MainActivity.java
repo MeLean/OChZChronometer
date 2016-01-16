@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import static android.widget.Toast.LENGTH_LONG;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemClickListener {
-    private static String DEFAULT_TASK_NAMES_STRING = "Task 1; Task 2; Task 3;";
+    static String DEFAULT_TASK_NAMES_STRING = "Task 1; Task 2; Task 3;";
     private boolean isThereTaskStarted = false;
     private Chronometer chronometer = null;
     private Button btnStartStop;
@@ -99,13 +99,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ListAdapter makeListAdapterFromString(String stringList) {
         tasksStringArray = Utils.splitBySeparator(stringList);
 
-        ListAdapter tasksListAdapter = new ArrayAdapter<>(
-                MainActivity.this,
+        return new ArrayAdapter<>(
+                this,
                 android.R.layout.simple_expandable_list_item_1,
                 Utils.removeDuplicateOrEmptyTasks(tasksStringArray)
         );
-
-        return tasksListAdapter;
     }
 
     @Override
@@ -121,13 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (id) {
 
             case R.id.action_get_report:
-
-
-
-                String report = Utils.makeStringReport(tasksStringArray, taskMassiv);
-
                 Intent intentGetReport = new Intent(MainActivity.this, TasksReportActivity.class);
-                intentGetReport.putExtra(Utils.GET_TASKS_REPORT_EXTRA_STRING, report);
                 startActivity(intentGetReport);
                 break;
 
@@ -135,9 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 StringBuilder result = new StringBuilder();
                 //TODO ASINCTASK
                 try {
-                    db.open();
                     taskMassiv = db.getAllTasks();
-                    db.close();
                 } catch (Exception e) {//TODO better exceptionCatch
                     e.printStackTrace();
                 }
@@ -166,9 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
                                 try {
-                                    db.open();
                                     db.deleteAllTasks();
-                                    db.close();
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
@@ -304,6 +292,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toast.makeText(getApplicationContext(), "seconds elapsed: " + secondsElapsed + interruptionText,
                 Toast.LENGTH_SHORT).show();
     }
-
-
 }

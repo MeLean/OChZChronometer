@@ -12,7 +12,7 @@
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/no_entities_text"
         android:id="@+id/twTaskReport"
@@ -22,4 +22,5 @@
         android:scrollbars="vertical"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
 </RelativeLayout>
