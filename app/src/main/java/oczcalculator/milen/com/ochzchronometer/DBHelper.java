@@ -118,7 +118,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 tasksFromDB.add(new TaskEntity(employeeName, id, taskName, secondsWorked, isNotInterrupted, dateAdded));
             } while (taskCursor.moveToNext());
         }
-
+        taskCursor.close();
         close();
         return tasksFromDB;
     }

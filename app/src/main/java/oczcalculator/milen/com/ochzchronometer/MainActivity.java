@@ -21,10 +21,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import java.sql.SQLException;
-import java.util.ArrayList;
+
 
 import static android.widget.Toast.LENGTH_LONG;
 
@@ -38,8 +36,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView twTaskMessage_area;
     private EditText etEmployeeName;
     private ListView lwTasks;
-    private ArrayList<TaskEntity> taskMassiv;
-    private String[] tasksStringArray;
     private String stringList;
     private SharedPreferences SharedPreferencesFile;
     private SharedPreferences.Editor editor;
@@ -89,14 +85,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         lwTasks.setOnItemClickListener(this);
 
-        taskMassiv = new ArrayList<>();
-
         SharedPreferencesFile = getSharedPreferences(Utils.SHARED_PREFERENCES_FILE_NAME, 0);
         editor = SharedPreferencesFile.edit();
         db = DBHelper.getInstance(this);
     }
 
     private ListAdapter makeListAdapterFromString(String stringList) {
+        String[] tasksStringArray;
         tasksStringArray = Utils.splitBySeparator(stringList);
 
         return new ArrayAdapter<>(
@@ -124,25 +119,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.action_get_all_entities:
-                StringBuilder result = new StringBuilder();
-                //TODO ASINCTASK
-                try {
-                    taskMassiv = db.getAllTasks();
-                } catch (Exception e) {//TODO better exceptionCatch
-                    e.printStackTrace();
-                }
-
-                for (TaskEntity task : taskMassiv) {
-                    result.append(task.toString());
-                    result.append(getString(R.string.two_new_rows));
-                }
-
                 Intent intentAllRecords = new Intent(MainActivity.this, AllRecordsActivity.class);
-                intentAllRecords.putExtra(Utils.GET_ALL_REPORTS_EXTRA_STRING, result.toString());
                 startActivity(intentAllRecords);
                 break;
-
-
 
             case R.id.action_change_tasks:
                 Intent intent = new Intent(MainActivity.this, SetTasksActivity.class);
