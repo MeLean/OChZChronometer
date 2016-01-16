@@ -9,23 +9,24 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class TasksReportActivity extends AppCompatActivity {
-    private DBHelper db;
-    private ArrayList<TaskEntity> taskMassiv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks_report);
-        taskMassiv = new ArrayList<>();
-        db = DBHelper.getInstance(this);
+
+        ArrayList<TaskEntity> taskArray;
+        taskArray = new ArrayList<>();
+        DBHelper db = DBHelper.getInstance(this);
         try {
-            taskMassiv = db.getAllTasks();
+            taskArray = db.getAllTasks();
         } catch (Exception e) {//TODO better exceptionCatch
             e.printStackTrace();
         }
 
         SharedPreferences taskNamesPref = getSharedPreferences(Utils.SHARED_PREFERENCES_FILE_NAME, 0);
         String[] tasksNames = Utils.splitBySeparator(taskNamesPref.getString(Utils.SHARED_PREFERENCES_STRING_NAME, null));
-        String taskReportString = Utils.makeStringReport(tasksNames, taskMassiv);
+        String taskReportString = Utils.makeStringReport(tasksNames, taskArray);
 
 
         TextView twTaskReport = (TextView) findViewById(R.id.twTaskReport);

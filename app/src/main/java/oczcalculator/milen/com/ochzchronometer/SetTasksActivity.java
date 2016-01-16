@@ -1,9 +1,7 @@
 package oczcalculator.milen.com.ochzchronometer;
 
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -14,16 +12,12 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.sql.SQLException;
-
-
 public class SetTasksActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btn_set_tasks;
     private EditText etTaskInput;
     private CheckBox chbox_delete_cur_tasks;
     private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor preferencesEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +41,6 @@ public class SetTasksActivity extends AppCompatActivity implements View.OnClickL
         );
 
         sharedPreferences = getSharedPreferences(Utils.SHARED_PREFERENCES_FILE_NAME, 0);
-        preferencesEditor = sharedPreferences.edit();
     }
 
 
@@ -68,7 +61,6 @@ public class SetTasksActivity extends AppCompatActivity implements View.OnClickL
                 if (chbox_delete_cur_tasks.isChecked()) {
                     stringForSave = etTaskInputText;
                 } else {
-                    // todo purify the method
                     // checks if current string ends whit stringSeparator
                     String preferencesString = sharedPreferences.getString(Utils.SHARED_PREFERENCES_STRING_NAME, null);
                     String lastStringChar;
@@ -102,6 +94,8 @@ public class SetTasksActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void putStringInSharedPreferences(String stringForSave) {
+        SharedPreferences.Editor preferencesEditor;
+        preferencesEditor = sharedPreferences.edit();
         preferencesEditor.putString(Utils.SHARED_PREFERENCES_STRING_NAME, stringForSave);
         preferencesEditor.commit();
     }

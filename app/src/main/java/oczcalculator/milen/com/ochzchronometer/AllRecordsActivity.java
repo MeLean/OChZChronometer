@@ -15,16 +15,16 @@ public class AllRecordsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_all_reports);
 
         DBHelper db = DBHelper.getInstance(this);
-        ArrayList<TaskEntity> taskMassiv = new ArrayList<>();
+        ArrayList<TaskEntity> taskArray = new ArrayList<>();
         //TODO ASINCTASK
         try {
-            taskMassiv = db.getAllTasks();
+            taskArray = db.getAllTasks();
         } catch (Exception e) {//TODO better exceptionCatch
             e.printStackTrace();
         }
 
         StringBuilder result = new StringBuilder();
-        for (TaskEntity task : taskMassiv) {
+        for (TaskEntity task : taskArray) {
             result.append(task.toString());
             result.append(getString(R.string.two_new_rows));
         }
@@ -32,7 +32,7 @@ public class AllRecordsActivity extends AppCompatActivity {
         TextView twReports = (TextView) findViewById(R.id.twReports);
         String reports = result.toString();
 
-        if (reports != null && !(reports.equals(""))){
+        if (!(reports.equals(""))){
             twReports.setMovementMethod(new ScrollingMovementMethod());
             twReports.setText(reports);
         }else{

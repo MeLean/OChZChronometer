@@ -77,7 +77,7 @@ public class TaskEntity {
     public String toString() {
         String entityFormat = "employee: %s\ntask: %s done for %d sec.\n%s\nadded date: %s";
 
-        String resultString = String.format(
+        return  String.format(
                 entityFormat,
                 this.getEmployee(),
                 this.getTaskName(),
@@ -85,7 +85,5 @@ public class TaskEntity {
                 (isNotInterrupted() ? "is not interrupted" : "is interrupted"),
                 this.getDateAdded()
         );
-
-        return resultString;
     }
 }

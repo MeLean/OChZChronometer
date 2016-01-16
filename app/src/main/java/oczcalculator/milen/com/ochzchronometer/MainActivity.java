@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ListView lwTasks;
     private String stringList;
     private SharedPreferences SharedPreferencesFile;
-    private SharedPreferences.Editor editor;
     private DBHelper db;
 
     @Override
@@ -65,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
+        SharedPreferences.Editor editor;
+        editor = SharedPreferencesFile.edit();
         editor.putString(Utils.SHARED_PREFERENCES_STRING_NAME, stringList);
         editor.commit();
     }
@@ -86,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lwTasks.setOnItemClickListener(this);
 
         SharedPreferencesFile = getSharedPreferences(Utils.SHARED_PREFERENCES_FILE_NAME, 0);
-        editor = SharedPreferencesFile.edit();
         db = DBHelper.getInstance(this);
     }
 
@@ -250,10 +250,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Utils.getDateAsString(getString(R.string.date_time_pattern))
         );
         try {
-            //TODO ASINCTASK
-            db.open();
             db.addTask(entity);
-            db.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

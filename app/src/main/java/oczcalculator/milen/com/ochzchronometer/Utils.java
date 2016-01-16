@@ -1,6 +1,5 @@
 package oczcalculator.milen.com.ochzchronometer;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import java.text.SimpleDateFormat;
@@ -10,8 +9,6 @@ import java.util.Calendar;
 import java.util.HashSet;
 
 public class Utils {
-    static String GET_ALL_REPORTS_EXTRA_STRING = "reports";
-    static String GET_TASKS_REPORT_EXTRA_STRING = "tasksStringArray";
     static String SHARED_PREFERENCES_FILE_NAME = "ListViewTaskNames";
     static String SHARED_PREFERENCES_STRING_NAME = "stringList";
     static String TASK_SEPARATOR = ";";
@@ -58,14 +55,14 @@ public class Utils {
     }
 
     @NonNull
-    static String makeStringReport(String[] tasksStringArray, ArrayList<TaskEntity> taskMassiv) {
+    static String makeStringReport(String[] tasksStringArray, ArrayList<TaskEntity> taskArray) {
         StringBuilder report = new StringBuilder();
         String[] uniqueTasks = new HashSet<>(Arrays.asList(tasksStringArray)).toArray(new String[0]);
         for (String taskString : uniqueTasks) {
             int timesOccur = 0;
             long secondsTaskWorked = 0;
 
-            for (TaskEntity task : taskMassiv) {
+            for (TaskEntity task : taskArray) {
                 boolean hasMatch = task.getTaskName().equalsIgnoreCase(taskString);
                 if (hasMatch) {
                     secondsTaskWorked += task.getSecondsWorked();
