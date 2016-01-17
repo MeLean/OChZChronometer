@@ -32,8 +32,6 @@
     //actions in SetTasksActivity menu
     <string name="action_load_cur_tasks">Load available tasks</string>
 
-
-
     //SetTasksActivity
     <string name="delete_tasks">Delete current tasks</string>
     <string name="first_part_inputTasks_hint">Type tasks separated by </string>
@@ -49,4 +47,7 @@
     <string name="dialog_no">No</string>
     <string name="delete_db_alert">All records in database will be deleted. Are you sure?</string>
     <string name="two_new_rows">\n\n</string>
+    <string name="header_task_name">Task Name</string>
+    <string name="header_times_occur">Times Occurs</string>
+    <string name="header_average_time">Average Time</string>
 </resources>

@@ -54,6 +54,7 @@ public class Utils {
         return result.toString();
     }
 
+    //TODO remove this when table view is ready
     @NonNull
     static String makeStringReport(String[] tasksStringArray, ArrayList<TaskEntity> taskArray) {
         StringBuilder report = new StringBuilder();

@@ -10,17 +10,22 @@
     tools:showIn="@layout/activity_tasks_report"
     tools:context="oczcalculator.milen.com.ochzchronometer.TasksReportActivity">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/no_entities_text"
-        android:id="@+id/twTaskReport"
-        android:nestedScrollingEnabled="false"
-        android:textAlignment="inherit"
-        android:scrollIndicators="top|left|bottom|start|end|right"
-        android:scrollbars="vertical"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+    You don't technically need the LinearLayout in the ScrollView:
 
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="vertical"
+        android:layout_weight="1">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:id="@+id/tlResultTable"
+            android:layout_alignParentEnd="false">
+
+        </TableLayout>
+    </ScrollView>
 </RelativeLayout>
