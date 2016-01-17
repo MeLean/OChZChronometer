@@ -120,7 +120,7 @@ public class TasksReportActivity extends AppCompatActivity {
 
     private void purefyView(TextView view) {
         view.setBackgroundResource(cell_background);
-        int padding = 10;
+        int padding = 5;
         int textSize = 18;
         float density = getResources().getDisplayMetrics().density;
         int dpPadding = (int)(padding * density);
