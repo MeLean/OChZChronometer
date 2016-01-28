@@ -10,8 +10,6 @@
     tools:showIn="@layout/activity_tasks_report"
     tools:context="oczcalculator.milen.com.ochzchronometer.TasksReportActivity">
 
-    You don't technically need the LinearLayout in the ScrollView:
-
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -25,7 +23,6 @@
             android:layout_marginTop="10dp"
             android:id="@+id/tlResultTable"
             android:layout_alignParentEnd="false">
-
         </TableLayout>
     </ScrollView>
 </RelativeLayout>

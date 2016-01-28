@@ -71,7 +71,7 @@ public class TasksReportActivity extends AppCompatActivity {
 
             if (secondsTaskWorked != 0) {
                 float averageTime = timesOccur != 0 ? (float) (secondsTaskWorked / timesOccur) : (float) secondsTaskWorked;
-                TableRow row = makeRow(context, taskName, String.valueOf(timesOccur), String.valueOf(averageTime));
+                TableRow row = makeRow(context, taskName, String.valueOf(timesOccur), Utils.convertSecondsInTmeString(averageTime));
                 tlResultTable.addView(row);
             }
         }
@@ -95,20 +95,19 @@ public class TasksReportActivity extends AppCompatActivity {
 
         TextView twTaskName = new TextView(context);
         twTaskName.setLayoutParams(taskNameParams);
-        purefyView(twTaskName);
+        purifyView(twTaskName);
 
         TextView twTimesOccur = new TextView(context);
         twTimesOccur.setLayoutParams(timesOccurParams);
-        purefyView(twTimesOccur);
+        purifyView(twTimesOccur);
 
 
         TextView twAverageTime = new TextView(context);
         twAverageTime.setLayoutParams(averageTimeParams);
-        purefyView(twAverageTime);
+        purifyView(twAverageTime);
 
         twTaskName.setText(taskName);
         twTimesOccur.setText(timesOccur);
-        //TODO make a hours, minutes and seconds
         twAverageTime.setText(averageTime);
 
         row.addView(twTaskName);
@@ -118,7 +117,7 @@ public class TasksReportActivity extends AppCompatActivity {
         return row;
     }
 
-    private void purefyView(TextView view) {
+    private void purifyView(TextView view) {
         view.setBackgroundResource(cell_background);
         int padding = 5;
         int textSize = 18;

@@ -12,6 +12,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class SetTasksActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btn_set_tasks;
@@ -81,7 +86,15 @@ public class SetTasksActivity extends AppCompatActivity implements View.OnClickL
                 }
 
                 if (stringForSave != null && !stringForSave.equals("")) {
-                    putStringInSharedPreferences(stringForSave);
+                    // to ensure that tasks in string are only unique
+                    Set<String> uniqueTasksSet = new HashSet<>(Arrays.asList(Utils.splitBySeparator(stringForSave)));
+                    StringBuilder stringForAdding = new StringBuilder();
+                    for (String stringTask : uniqueTasksSet) {
+                        stringForAdding.append(stringTask);
+                        stringForAdding.append(Utils.TASK_SEPARATOR);
+                    }
+
+                    putStringInSharedPreferences(stringForAdding.toString());
                 }
                 // get back to previous activity in this case MainActivity
                 this.finish();

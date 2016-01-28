@@ -3,7 +3,6 @@ package oczcalculator.milen.com.ochzchronometer;
 import android.support.annotation.NonNull;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -54,30 +53,20 @@ public class Utils {
         return result.toString();
     }
 
-    //TODO remove this when table view is ready
-    @NonNull
-    static String makeStringReport(String[] tasksStringArray, ArrayList<TaskEntity> taskArray) {
-        StringBuilder report = new StringBuilder();
-        String[] uniqueTasks = new HashSet<>(Arrays.asList(tasksStringArray)).toArray(new String[0]);
-        for (String taskString : uniqueTasks) {
-            int timesOccur = 0;
-            long secondsTaskWorked = 0;
 
-            for (TaskEntity task : taskArray) {
-                boolean hasMatch = task.getTaskName().equalsIgnoreCase(taskString);
-                if (hasMatch) {
-                    secondsTaskWorked += task.getSecondsWorked();
-                    if (task.isNotInterrupted()) {
-                        timesOccur++;
-                    }
-                }
-            }
+    public static String convertSecondsInTmeString(float averageTime) {
+        int hours = (int) averageTime / 3600;
+        int minutes = (int)((averageTime - (hours * 3600)) / 60);
+        int seconds = (int)(averageTime - (hours * 3600) - (minutes * 60));
+        return String.format("%s:%s:%s", putLeadingZero(hours), putLeadingZero(minutes), putLeadingZero(seconds));
+    }
 
-            if (secondsTaskWorked != 0) {
-                float averageTime = timesOccur != 0 ? (float) (secondsTaskWorked / timesOccur) : (float) secondsTaskWorked;
-                report.append(String.format("%s:\ttimes: %d\tavg: %.2f\n", taskString, timesOccur, averageTime));
-            }
+    private static String putLeadingZero(int value) {
+        String leadingZero = "";
+        if (value < 10){
+            leadingZero = "0";
         }
-        return report.toString();
+
+        return leadingZero + value;
     }
 }
