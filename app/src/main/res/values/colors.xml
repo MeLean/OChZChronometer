@@ -5,4 +5,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorLightGray">#bebebe</color>
+    <color name="colorDeepPurple">#66004c</color>
+    <color name="colorJustPurple">#ff00bf</color>
+    <color name="colorLightPurple">#ff4dd2</color>
 </resources>
