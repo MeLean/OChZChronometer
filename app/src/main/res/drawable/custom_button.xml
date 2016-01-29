@@ -1,28 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item >
-        <shape android:shape="rectangle">
-            <corners
-                android:topLeftRadius="@dimen/button_radius"
-                android:bottomLeftRadius="@dimen/button_radius"/>
-            <stroke
-                android:width="@dimen/button_stroke_width"
-                android:color="@color/colorBlack"/>
-            <gradient
-                android:angle="-45"
-                android:startColor="@color/colorLightPurple"
-                android:endColor="@color/colorDeepPurple" />
-        </shape>
-    </item>
     <item android:state_pressed="true" >
         <shape android:shape="rectangle"  >
             <corners
                 android:topLeftRadius="@dimen/button_radius"
-                android:bottomLeftRadius="@dimen/button_radius"/>
+                android:topRightRadius="0dp"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="@dimen/button_radius"/>
             <stroke
                 android:width="@dimen/button_stroke_width"
                 android:color="@color/colorBlack"/>
-            <gradient android:angle="-45"
+            <gradient android:angle="-90"
                 android:startColor="@color/colorDeepPurple"
                 android:endColor="@color/colorLightPurple"  />
         </shape>
@@ -32,7 +20,9 @@
             android:shape="rectangle">
             <corners
                 android:topLeftRadius="@dimen/button_radius"
-                android:bottomLeftRadius="@dimen/button_radius"/>
+                android:topRightRadius="0dp"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="@dimen/button_radius"/>
             <stroke
                 android:width="@dimen/button_stroke_width"
                 android:color="@color/colorBlack" />
@@ -40,4 +30,22 @@
                 android:color="@color/colorJustPurple"/>
         </shape>
     </item>
+    <item>
+        <shape android:shape="rectangle">
+        <corners
+            android:topLeftRadius="@dimen/button_radius"
+            android:topRightRadius="0dp"
+            android:bottomLeftRadius="0dp"
+            android:bottomRightRadius="@dimen/button_radius"/>
+        <stroke
+            android:width="@dimen/button_stroke_width"
+            android:color="@color/colorBlack"/>
+        <gradient
+            android:angle="-90"
+            android:startColor="@color/colorLightPurple"
+            android:endColor="@color/colorDeepPurple" />
+        </shape>
+    </item>
+
+
 </selector>
